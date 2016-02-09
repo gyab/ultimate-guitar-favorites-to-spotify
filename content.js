@@ -3,7 +3,7 @@ $(document).ready(function() {
     var x = document.getElementsByClassName("bl");
 
     var iDiv = document.createElement('div');
-    iDiv.innerHTML = "<button id='checkPage'>Export to Spotify</button><button class='btn btn-primary' id='btn-login'>Login</button><div id='result'></div><script id='result-template' type='text/x-handlebars-template'><dl><img src='{{images.0.url}}'><dt>User Name</dt><dd>{{id}}</dd><dt>Display Name</dt><dd>{{display_name}}</dd><dt>Country</dt><dd>{{country}}</dd><dt>Followers</dt><dd>{{followers.total}}</dd><dt>Profile</dt><dd><a href='{{external_urls.spotify}}' target='_blank'>{{external_urls.spotify}}</a></dd><dt>Email</dt><dd>{{email}}</dd><dt>Product</dt><dd>{{product}}</dd></dl></script>";
+    iDiv.innerHTML = "<button id='checkPage'>Export to Spotify</button><button class='btn btn-primary' id='btn-login'>Login</button>";
     iDiv.id = 'block';
     iDiv.className = 'block';
     document.body.insertBefore(iDiv, document.body.firstChild);
@@ -15,66 +15,18 @@ $(document).ready(function() {
         });
     });
 
-    var templateSource = document.getElementById('result-template').innerHTML,
-        template = Handlebars.compile(templateSource),
-        resultsPlaceholder = document.getElementById('result'),
-        loginButton = document.getElementById('btn-login');
+    var loginButton = document.getElementById('btn-login');
 
     loginButton.addEventListener('click', function() {
         login(function(accessToken) {
             getUserData(accessToken)
                 .then(function(response) {
-                    var track_id;
-                    getTrack(accessToken, track_id)
-                        .then(function(response) {
-                            console.log(track_id);
-                            addToPlaylist(accessToken, "ahem", "0UBBuHt9ZNiqEgAxzbIh0I", track_id); 
-                        });
+                    songs = getData();                  ;
+                    createPlaylist(accessToken, response.id);
                     //loginButton.style.display = 'none';
-                    //createPlaylist(accessToken, response.id);
                 });
         });
     });
-
-    function getTrack(accessToken, track_id) {
-        $.ajax({
-            type: "GET",
-            url: "https://api.spotify.com/v1/search",
-            data: 
-                {
-                    "q": "Arctic Monkeys Riot Van",
-                    "type": "track"
-                }
-            ,
-            dataType: "json",
-            contentType: "application/json",
-            headers: {
-                'Authorization': 'Bearer ' + accessToken,
-            },
-            success: function(data){
-                track_id = data.tracks.items[0].artists[0].id;
-                console.log(track_id);
-            }
-        });     
-    }
-
-    function addToPlaylist(accessToken, user_id, playlist_id, track_id) {
-        return $.ajax({
-            type: "POST",
-            url: "https://api.spotify.com/v1/users/"+ user_id +"/playlists/"+ playlist_id +"/tracks",
-            data: {
-                "uris": "spotify:track:" + track_id,
-            },
-            dataType: "json",
-            contentType: "application/json",
-            headers: {
-                'Authorization': 'Bearer ' + accessToken,
-            },
-            success: function(data){
-                console.log(data);
-            }
-        });
-    }
 
     function createPlaylist(accessToken, id) {
         return $.ajax({
@@ -88,6 +40,53 @@ $(document).ready(function() {
             contentType: "application/json",
             headers: {
                 'Authorization': 'Bearer ' + accessToken,
+            },
+            success: function(data) {
+                getTrack(accessToken);
+            }
+        });
+    }
+
+    function getTrack(accessToken) {
+        for(var i = 0; i < songs.length; i++){
+            $.ajax({
+                type: "GET",
+                url: "https://api.spotify.com/v1/search",
+                data: 
+                    {
+                        "q": songs[i][0] + " " + songs[i][1],
+                        "type": "track"
+                    }
+                ,
+                dataType: "json",
+                contentType: "application/json",
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken,
+                },
+                async: false,
+                success: function(data){
+                    console.log(songs[i][0] + " " + songs[i][1] + " " + data.tracks.items[0].id);
+                    //addToPlaylist(accessToken, "ahem", "0UBBuHt9ZNiqEgAxzbIh0I", data.tracks.items[0].id); 
+                }
+            });
+        }
+        console.log(songs);
+    }
+
+    function addToPlaylist(accessToken, user_id, playlist_id, track_id) {
+        return $.ajax({
+            type: "POST",
+            url: "https://api.spotify.com/v1/users/" + user_id + "/playlists/" + playlist_id + "/tracks",
+            data: JSON.stringify({
+                "uris": ["spotify:track:6sX68MHBh0nqvHCr1uDTC1"]
+            }),
+            dataType: "json",
+            contentType: "application/json",
+            headers: {
+                'Authorization': 'Bearer ' + accessToken
+            },
+            success: function(data){
+                
             }
         });
     }
@@ -164,10 +163,10 @@ $(document).ready(function() {
             songs.push([
                 artist,
                 $(this).find('td:nth-child(4)').text()
-                .replace(" Acoustic", '')
-                .replace(" Chords", '')
-                .replace(" Tab", "")
-                .replace(/\s\(ver \d+\)/, "")
+                    .replace(" Acoustic", '')
+                    .replace(" Chords", '')
+                    .replace(" Tajsonb", "")
+                    .replace(/\s\(ver \d+\)/, "")
             ]);
         });
 
