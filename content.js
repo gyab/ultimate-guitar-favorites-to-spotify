@@ -48,7 +48,9 @@ $(document).ready(function() {
     }
 
     function getTrack(accessToken) {
+        arrID = [];
         for(var i = 0; i < songs.length; i++){
+            console.log(i);
             $.ajax({
                 type: "GET",
                 url: "https://api.spotify.com/v1/search",
@@ -65,20 +67,21 @@ $(document).ready(function() {
                 },
                 async: false,
                 success: function(data){
-                    console.log(songs[i][0] + " " + songs[i][1] + " " + data.tracks.items[0].id);
-                    //addToPlaylist(accessToken, "ahem", "0UBBuHt9ZNiqEgAxzbIh0I", data.tracks.items[0].id); 
+                    arrID.push("spotify:track:"+data.tracks.items[0].id)
                 }
             });
         }
-        console.log(songs);
+        console.log(arrID.join());
+        //addToPlaylist(accessToken, "ahem", "0UBBuHt9ZNiqEgAxzbIh0I", arrID.join()); 
+
     }
 
-    function addToPlaylist(accessToken, user_id, playlist_id, track_id) {
-        return $.ajax({
+    function addToPlaylist(accessToken, user_id, playlist_id, idTracks) {
+        $.ajax({
             type: "POST",
             url: "https://api.spotify.com/v1/users/" + user_id + "/playlists/" + playlist_id + "/tracks",
             data: JSON.stringify({
-                "uris": ["spotify:track:6sX68MHBh0nqvHCr1uDTC1"]
+                "uris": idTracks
             }),
             dataType: "json",
             contentType: "application/json",
@@ -165,7 +168,8 @@ $(document).ready(function() {
                 $(this).find('td:nth-child(4)').text()
                     .replace(" Acoustic", '')
                     .replace(" Chords", '')
-                    .replace(" Tajsonb", "")
+                    .replace(" Tab", '')
+                    .replace(" Ukulele", '')
                     .replace(/\s\(ver \d+\)/, "")
             ]);
         });
