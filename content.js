@@ -29,11 +29,12 @@ $(document).ready(function() {
     });
 
     function createPlaylist(accessToken, id) {
+        var playlistName = window.prompt("Playlist name","Type the name of the playlist");
         return $.ajax({
             type: "POST",
             url: "https://api.spotify.com/v1/users/" + id + "/playlists",
             data: JSON.stringify({
-                "name": "A New Playlist",
+                "name": playlistName,
                 "public": "false"
             }),
             dataType: "json",
@@ -42,13 +43,15 @@ $(document).ready(function() {
                 'Authorization': 'Bearer ' + accessToken,
             },
             success: function(data) {
-                getTrack(accessToken);
+                getTrack(accessToken, data['id']);
             }
         });
     }
 
-    function getTrack(accessToken) {
-        arrID = [];
+    function getTrack(accessToken, playlistID) {
+        var arrID = new Object();
+        arrID.uris = [];
+
         for(var i = 0; i < songs.length; i++){
             console.log(i);
             $.ajax({
@@ -67,22 +70,20 @@ $(document).ready(function() {
                 },
                 async: false,
                 success: function(data){
-                    arrID.push("spotify:track:"+data.tracks.items[0].id)
+                    arrID.uris.push("spotify:track:"+data.tracks.items[0].id)
                 }
             });
         }
-        console.log(arrID.join());
-        //addToPlaylist(accessToken, "ahem", "0UBBuHt9ZNiqEgAxzbIh0I", arrID.join()); 
+        //console.log(arrID.join());
+        addToPlaylist(accessToken, "ahem", playlistID, JSON.stringify(arrID.uris)); 
 
     }
 
     function addToPlaylist(accessToken, user_id, playlist_id, idTracks) {
         $.ajax({
             type: "POST",
-            url: "https://api.spotify.com/v1/users/" + user_id + "/playlists/" + playlist_id + "/tracks",
-            data: JSON.stringify({
-                "uris": idTracks
-            }),
+            url: "https://api.spotify.com/v1/users/" + user_id + "/playlists/" + playlist_id + "/tracks/",
+            data: idTracks,
             dataType: "json",
             contentType: "application/json",
             headers: {
