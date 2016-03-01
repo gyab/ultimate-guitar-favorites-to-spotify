@@ -3,7 +3,7 @@ $(document).ready(function() {
     var x = document.getElementsByClassName("bl");
 
     var iDiv = document.createElement('div');
-    iDiv.innerHTML = "<button class='btn btn-primary' id='btn-login'>Create Spotify playlist</button>";
+    iDiv.innerHTML = "<style>.block { position: absolute; height: 100px; width: 100px; top: 50%; left: 50%; margin-left: -50px; margin-top: -50px; background: url('http://s28.postimg.org/epbmv9xw9/ajax_loader.gif'); background-size: 100%; }";
     iDiv.id = 'block';
     iDiv.className = 'block';
     document.body.insertBefore(iDiv, document.body.firstChild);
@@ -59,13 +59,13 @@ $(document).ready(function() {
         arrID.uris = [];
         var results = [];
 
-        for(var i = 0; i < songs.length; i++){
+        songs.forEach(function(song){
             results.push($.ajax({
                 type: "GET",
                 url: "https://api.spotify.com/v1/search",
                 data: 
                     {
-                        "q": songs[i][0] + " " + songs[i][1],
+                        "q": song[0] + " " + song[1],
                         "type": "track"
                     }
                 ,
@@ -76,15 +76,15 @@ $(document).ready(function() {
                 },
                 success: function(data){
                     try {
-                            arrID.uris.push("spotify:track:"+data.tracks.items[0].id)                    
+                        arrID.uris.push("spotify:track:"+data.tracks.items[0].id)                    
                         }
                     catch (e){
                         console.log(e);
                     }
                 }
             }));
-            console.log(songs[i][0]);
-        }
+            console.log(song[0]);
+        })
 
         $.when.apply(this, results).done(function() {
             document.getElementsByClassName('spinner')[0].style.display = 'none';
