@@ -1,12 +1,12 @@
 $(document).ready(function() {
 
     var iDiv = document.createElement('div');
-    iDiv.setAttribute("style", "position:absolute;height:100px;width:100px;top:45%;left:50%; border:0; margin-left:-50px; #btn-login{background:url(http://s24.postimg.org/a767sr8c1/icon128.png) no-repeat;background-size:auto 100%; width:100%;height:100%;top:85px;border:0}");
+    iDiv.setAttribute("style", "position:absolute;height:100px;width:100px;top:45%;left:50%; border:0; margin-left:-50px;");
     iDiv.innerHTML = "<button id='btn-login' href=''></button>";
     iDiv.id = 'block';
     iDiv.className = 'block';
     document.body.insertBefore(iDiv, document.body.firstChild);
-    document.getElementById('btn-login').setAttribute("style", "background:url(http://s24.postimg.org/a767sr8c1/icon128.png) no-repeat;background-size:auto 100%; width:100%;height:100%;top:85px;border:0");
+    document.getElementById('btn-login').setAttribute("style", "background:url(https://antoinemary.com/media/icon128.png) no-repeat;background-size:auto 100%; width:100%;height:100%;top:85px;border:0");
 
     var loginButton = document.getElementById('btn-login');
 
@@ -20,13 +20,11 @@ $(document).ready(function() {
         });
     });
 
-
-
     var idUser = null;
 
     function createPlaylist(accessToken, id) {
-        var playlistName = window.prompt("Playlist name","Type the name you want for the playlist");
-        if(playlistName) {
+        var playlistName = window.prompt("Playlist name", "Type the name you want for the playlist");
+        if (playlistName) {
             document.getElementById('block').innerHTML = "<style>.loader{position:relative;height:100%;width:100%; text-align:center;vertical-align:middle;line-height:50px; margin:100px auto;font-size:12px;width:1em;height:1em;border-radius:50%;text-indent:-9999em;-webkit-animation:load5 1.1s infinite ease;animation:load5 1.1s infinite ease;-webkit-transform:translateZ(0);-ms-transform:translateZ(0);transform:translateZ(0)}@-webkit-keyframes load5{0%,100%{box-shadow:0 -2.6em 0 0 #fff,1.8em -1.8em 0 0 rgba(255,255,255,.2),2.5em 0 0 0 rgba(255,255,255,.2),1.75em 1.75em 0 0 rgba(255,255,255,.2),0 2.5em 0 0 rgba(255,255,255,.2),-1.8em 1.8em 0 0 rgba(255,255,255,.2),-2.6em 0 0 0 rgba(255,255,255,.5),-1.8em -1.8em 0 0 rgba(255,255,255,.7)}12.5%{box-shadow:0 -2.6em 0 0 rgba(255,255,255,.7),1.8em -1.8em 0 0 #fff,2.5em 0 0 0 rgba(255,255,255,.2),1.75em 1.75em 0 0 rgba(255,255,255,.2),0 2.5em 0 0 rgba(255,255,255,.2),-1.8em 1.8em 0 0 rgba(255,255,255,.2),-2.6em 0 0 0 rgba(255,255,255,.2),-1.8em -1.8em 0 0 rgba(255,255,255,.5)}25%{box-shadow:0 -2.6em 0 0 rgba(255,255,255,.5),1.8em -1.8em 0 0 rgba(255,255,255,.7),2.5em 0 0 0 #fff,1.75em 1.75em 0 0 rgba(255,255,255,.2),0 2.5em 0 0 rgba(255,255,255,.2),-1.8em 1.8em 0 0 rgba(255,255,255,.2),-2.6em 0 0 0 rgba(255,255,255,.2),-1.8em -1.8em 0 0 rgba(255,255,255,.2)}37.5%{box-shadow:0 -2.6em 0 0 rgba(255,255,255,.2),1.8em -1.8em 0 0 rgba(255,255,255,.5),2.5em 0 0 0 rgba(255,255,255,.7),1.75em 1.75em 0 0 rgba(255,255,255,.2),0 2.5em 0 0 rgba(255,255,255,.2),-1.8em 1.8em 0 0 rgba(255,255,255,.2),-2.6em 0 0 0 rgba(255,255,255,.2),-1.8em -1.8em 0 0 rgba(255,255,255,.2)}50%{box-shadow:0 -2.6em 0 0 rgba(255,255,255,.2),1.8em -1.8em 0 0 rgba(255,255,255,.2),2.5em 0 0 0 rgba(255,255,255,.5),1.75em 1.75em 0 0 rgba(255,255,255,.7),0 2.5em 0 0 #fff,-1.8em 1.8em 0 0 rgba(255,255,255,.2),-2.6em 0 0 0 rgba(255,255,255,.2),-1.8em -1.8em 0 0 rgba(255,255,255,.2)}62.5%{box-shadow:0 -2.6em 0 0 rgba(255,255,255,.2),1.8em -1.8em 0 0 rgba(255,255,255,.2),2.5em 0 0 0 rgba(255,255,255,.2),1.75em 1.75em 0 0 rgba(255,255,255,.5),0 2.5em 0 0 rgba(255,255,255,.7),-1.8em 1.8em 0 0 #fff,-2.6em 0 0 0 rgba(255,255,255,.2),-1.8em -1.8em 0 0 rgba(255,255,255,.2)}75%{box-shadow:0 -2.6em 0 0 rgba(255,255,255,.2),1.8em -1.8em 0 0 rgba(255,255,255,.2),2.5em 0 0 0 rgba(255,255,255,.2),1.75em 1.75em 0 0 rgba(255,255,255,.2),0 2.5em 0 0 rgba(255,255,255,.5),-1.8em 1.8em 0 0 rgba(255,255,255,.7),-2.6em 0 0 0 #fff,-1.8em -1.8em 0 0 rgba(255,255,255,.2)}87.5%{box-shadow:0 -2.6em 0 0 rgba(255,255,255,.2),1.8em -1.8em 0 0 rgba(255,255,255,.2),2.5em 0 0 0 rgba(255,255,255,.2),1.75em 1.75em 0 0 rgba(255,255,255,.2),0 2.5em 0 0 rgba(255,255,255,.2),-1.8em 1.8em 0 0 rgba(255,255,255,.5),-2.6em 0 0 0 rgba(255,255,255,.7),-1.8em -1.8em 0 0 #fff}}@keyframes load5{0%,100%{box-shadow:0 -2.6em 0 0 #fff,1.8em -1.8em 0 0 rgba(255,255,255,.2),2.5em 0 0 0 rgba(255,255,255,.2),1.75em 1.75em 0 0 rgba(255,255,255,.2),0 2.5em 0 0 rgba(255,255,255,.2),-1.8em 1.8em 0 0 rgba(255,255,255,.2),-2.6em 0 0 0 rgba(255,255,255,.5),-1.8em -1.8em 0 0 rgba(255,255,255,.7)}12.5%{box-shadow:0 -2.6em 0 0 rgba(255,255,255,.7),1.8em -1.8em 0 0 #fff,2.5em 0 0 0 rgba(255,255,255,.2),1.75em 1.75em 0 0 rgba(255,255,255,.2),0 2.5em 0 0 rgba(255,255,255,.2),-1.8em 1.8em 0 0 rgba(255,255,255,.2),-2.6em 0 0 0 rgba(255,255,255,.2),-1.8em -1.8em 0 0 rgba(255,255,255,.5)}25%{box-shadow:0 -2.6em 0 0 rgba(255,255,255,.5),1.8em -1.8em 0 0 rgba(255,255,255,.7),2.5em 0 0 0 #fff,1.75em 1.75em 0 0 rgba(255,255,255,.2),0 2.5em 0 0 rgba(255,255,255,.2),-1.8em 1.8em 0 0 rgba(255,255,255,.2),-2.6em 0 0 0 rgba(255,255,255,.2),-1.8em -1.8em 0 0 rgba(255,255,255,.2)}37.5%{box-shadow:0 -2.6em 0 0 rgba(255,255,255,.2),1.8em -1.8em 0 0 rgba(255,255,255,.5),2.5em 0 0 0 rgba(255,255,255,.7),1.75em 1.75em 0 0 rgba(255,255,255,.2),0 2.5em 0 0 rgba(255,255,255,.2),-1.8em 1.8em 0 0 rgba(255,255,255,.2),-2.6em 0 0 0 rgba(255,255,255,.2),-1.8em -1.8em 0 0 rgba(255,255,255,.2)}50%{box-shadow:0 -2.6em 0 0 rgba(255,255,255,.2),1.8em -1.8em 0 0 rgba(255,255,255,.2),2.5em 0 0 0 rgba(255,255,255,.5),1.75em 1.75em 0 0 rgba(255,255,255,.7),0 2.5em 0 0 #fff,-1.8em 1.8em 0 0 rgba(255,255,255,.2),-2.6em 0 0 0 rgba(255,255,255,.2),-1.8em -1.8em 0 0 rgba(255,255,255,.2)}62.5%{box-shadow:0 -2.6em 0 0 rgba(255,255,255,.2),1.8em -1.8em 0 0 rgba(255,255,255,.2),2.5em 0 0 0 rgba(255,255,255,.2),1.75em 1.75em 0 0 rgba(255,255,255,.5),0 2.5em 0 0 rgba(255,255,255,.7),-1.8em 1.8em 0 0 #fff,-2.6em 0 0 0 rgba(255,255,255,.2),-1.8em -1.8em 0 0 rgba(255,255,255,.2)}75%{box-shadow:0 -2.6em 0 0 rgba(255,255,255,.2),1.8em -1.8em 0 0 rgba(255,255,255,.2),2.5em 0 0 0 rgba(255,255,255,.2),1.75em 1.75em 0 0 rgba(255,255,255,.2),0 2.5em 0 0 rgba(255,255,255,.5),-1.8em 1.8em 0 0 rgba(255,255,255,.7),-2.6em 0 0 0 #fff,-1.8em -1.8em 0 0 rgba(255,255,255,.2)}87.5%{box-shadow:0 -2.6em 0 0 rgba(255,255,255,.2),1.8em -1.8em 0 0 rgba(255,255,255,.2),2.5em 0 0 0 rgba(255,255,255,.2),1.75em 1.75em 0 0 rgba(255,255,255,.2),0 2.5em 0 0 rgba(255,255,255,.2),-1.8em 1.8em 0 0 rgba(255,255,255,.5),-2.6em 0 0 0 rgba(255,255,255,.7),-1.8em -1.8em 0 0 #fff}}</style><div class='loader'>Loading...</div>";
             return $.ajax({
                 type: "POST",
@@ -53,26 +51,23 @@ $(document).ready(function() {
         arrID.uris = [];
         var results = [];
 
-        songs.forEach(function(song){
+        songs.forEach(function(song) {
             results.push($.ajax({
                 type: "GET",
                 url: "https://api.spotify.com/v1/search",
-                data: 
-                    {
-                        "q": song[0] + " " + song[1],
-                        "type": "track"
-                    }
-                ,
+                data: {
+                    "q": song[0] + " " + song[1],
+                    "type": "track"
+                },
                 dataType: "json",
                 contentType: "application/json",
                 headers: {
                     'Authorization': 'Bearer ' + accessToken,
                 },
-                success: function(data){
+                success: function(data) {
                     try {
-                        arrID.uris.push("spotify:track:"+data.tracks.items[0].id)                    
-                    }
-                    catch (e){
+                        arrID.uris.push("spotify:track:" + data.tracks.items[0].id)
+                    } catch (e) {
                         console.log(e);
                     }
                 }
@@ -81,7 +76,7 @@ $(document).ready(function() {
         })
 
         $.when.apply(this, results).done(function() {
-            addToPlaylist(accessToken, idUser, playlistID, JSON.stringify(arrID.uris)); 
+            addToPlaylist(accessToken, idUser, playlistID, JSON.stringify(arrID.uris));
         });
     }
 
@@ -95,8 +90,8 @@ $(document).ready(function() {
             headers: {
                 'Authorization': 'Bearer ' + accessToken
             },
-            success: function(data){
-                document.getElementById('block').innerHTML = "<style>#block{position:relative;height:100%;width:100%; background:url(http://s24.postimg.org/4xawcbjsl/thumb_up_512.png) no-repeat;background-size:auto 100%}</style>";
+            success: function(data) {
+                document.getElementById('block').innerHTML = "<style>#block{position:relative;height:100%;width:100%; background:url(https://antoinemary.com/media/thumb_up-128.png) no-repeat;background-size:auto 100%}</style>";
                 $("#block").fadeOut(3000);
             }
         });
@@ -144,7 +139,7 @@ $(document).ready(function() {
                 'Authorization': 'Bearer ' + accessToken,
 
             },
-            success: function (data) {
+            success: function(data) {
                 idUser = data.id;
             }
         });
@@ -177,11 +172,11 @@ $(document).ready(function() {
             songs.push([
                 artist,
                 $(this).find('td:nth-child(4)').text()
-                    .replace(" Acoustic", '')
-                    .replace(" Chords", '')
-                    .replace(" Tab", '')
-                    .replace(" Ukulele", '')
-                    .replace(/\s\(ver \d+\)/, "")
+                .replace(" Acoustic", '')
+                .replace(" Chords", '')
+                .replace(" Tab", '')
+                .replace(" Ukulele", '')
+                .replace(/\s\(ver \d+\)/, "")
             ]);
         });
 
