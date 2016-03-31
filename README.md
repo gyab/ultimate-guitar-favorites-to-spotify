@@ -1,5 +1,5 @@
 # ultimate-guitar-favorites-to-spotify
-Creates a spotify playlist based on ultimate guitar favorites.
+Creates a Spotify playlist based on Ultimate Guitar favorites.
 
 [Download on Chrome Store](https://chrome.google.com/webstore/detail/utimate-guitar-favorites/jhadlgfdcpedmbohiknkbnfmpiaccocl)
 
