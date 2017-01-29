@@ -218,16 +218,20 @@ function getUserData(accessToken, callback) {
         headers: {
             'Authorization': 'Bearer ' + accessToken,
         }
-    }).then(function(response) {
-        response.json()
-        .then(function(json) {
-            userInfos = json;
-        })
-        .then(getData(songsArr))
-        .then(function() {
-            createPlaylist(accessToken, userInfos.id);
+    })
+    .then(function(response) {
+        return response.json(function(resolve, reject) {
+            resolve('success');
         });
-    }).catch(function(err) {
+    })
+    .then(function(json) {
+        userInfos = json;
+    })
+    .then(getData(songsArr))
+    .then(function() {
+        createPlaylist(accessToken, userInfos.id);
+    })
+    .catch(function(err) {
        console.log(err); 
     });
 }
