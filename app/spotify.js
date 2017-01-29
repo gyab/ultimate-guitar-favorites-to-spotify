@@ -8,6 +8,9 @@ let windowEventAttached = false;
 let userInfos = {};
 let songsArr = []
 
+/**
+ * Init the application. Only exported function of the file.
+ */
 export function init() {
     login(function(accessToken) {
         getUserData(accessToken);
@@ -16,8 +19,8 @@ export function init() {
 
 /**
  * Log to Spotify account to get specific rights 
- * @param  {function} callback
- * @return {string} accessToken - Spotify API token
+ * @param  {Function} callback
+ * @return {String} accessToken - Spotify API token
  */
 function login(callback) {
     let url = getLoginURL(CLIENT_ID, REDIRECT_URI, scopes);
@@ -47,7 +50,7 @@ function login(callback) {
 
  /**
  * Get user's favorites songs from http://my.ultimate-guitar.com/main.php?mode=favorites
- * @return {array} songs - artist and name of the song
+ * @return {Array} songs - artist and name of the song
  */
 function getData(pSongsArr) {
 
@@ -91,11 +94,11 @@ function getData(pSongsArr) {
 }
 
 /**
- * [getLoginURL description]
- * @param  {[type]} pClientID    [description]
- * @param  {[type]} pRedirectURI [description]
- * @param  {[type]} pScopes      [description]
- * @return {[type]}              [description]
+ * Get the login URL based on three parameters
+ * @param  {Integer} pClientID - Client ID
+ * @param  {String} pRedirectURI - Redirect URI
+ * @param  {Array} pScopes - Array that contains the rights the app will ask to the Spotify API
+ * @return {String} - Login URL
  */
 function getLoginURL(pClientID, pRedirectURI, pScopes) {
     return 'https://accounts.spotify.com/authorize?client_id=' + pClientID +
@@ -106,8 +109,8 @@ function getLoginURL(pClientID, pRedirectURI, pScopes) {
 
  /**
  * Create the Spotify playlist
- * @param {string} pAccessToken - Spotify API token
- * @param {string} pID - Spotify user ID
+ * @param {String} pAccessToken - Spotify API token
+ * @param {String} pID - Spotify user ID
  */
 function createPlaylist(pAccessToken, pID) {
     let playlistName = window.prompt("Playlist name", "Name of your playlist");
@@ -137,8 +140,8 @@ function createPlaylist(pAccessToken, pID) {
 
 /**
  * Get Spotify id of each track
- * @param  {string} accessToken - Spotify API token
- * @param  {string} playlistID - ID of the new Spotify playlist
+ * @param  {String} accessToken - Spotify API token
+ * @param  {String} playlistID - ID of the new Spotify playlist
  */
 function getTrack(pAccessToken, pPlaylistID, pSongsArr) {
     let arrID = { uris: [] },
@@ -188,10 +191,10 @@ function getTrack(pAccessToken, pPlaylistID, pSongsArr) {
 
 /**
  * Add songs to the new Spotify playlist
- * @param  {string} accessToken - Spotify API token
- * @param {string} userID - Spotify ID
- * @param  {string} playlistID - ID of the new Spotify playlist
- * @param {json} idTracks - Spotify URI for each song
+ * @param  {String} accessToken - Spotify API token
+ * @param {String} userID - Spotify ID
+ * @param  {String} playlistID - ID of the new Spotify playlist
+ * @param {JSON} idTracks - Spotify URI for each song
  */
 function addToPlaylist(accessToken, userID, playlistID, idTracks) {
     fetch("https://api.spotify.com/v1/users/" + userID + "/playlists/" + playlistID + "/tracks/",
@@ -211,7 +214,7 @@ function addToPlaylist(accessToken, userID, playlistID, idTracks) {
 
 /**
 * Get Current User’s Profile
-* @param  {string} accessToken - Spotify API token
+* @param  {String} accessToken - Spotify API token
 */
 function getUserData(accessToken, callback) {
     fetch('https://api.spotify.com/v1/me', {
