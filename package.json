@@ -19,18 +19,26 @@
   },
   "homepage": "https://github.com/anmary/ultimate-guitar-favorites-to-spotify#readme",
   "devDependencies": {
-    "babel-core": "^6.21.0",
+    "babel-cli": "^6.22.2",
+    "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
-    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
+    "css-loader": "^0.26.1",
     "html-webpack-plugin": "^2.24.1",
     "http-server": "^0.9.0",
     "install": "^0.8.4",
-    "webpack": "^2.2.0-rc.3",
+    "style-loader": "^0.13.1",
+    "webpack": "^2.2.1",
     "webpack-dev-server": "^2.2.0-rc.0",
     "webpack-merge": "^2.0.0",
     "webpack-validator": "^2.3.0"
   },
   "dependencies": {
-    "handlebars": "^4.0.6"
+    "halogen": "^0.2.0",
+    "handlebars": "^4.0.6",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-modal": "^1.6.5"
   }
 }
