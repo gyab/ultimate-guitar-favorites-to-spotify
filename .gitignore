@@ -1,6 +1,0 @@
-*.DS_Store
-.babelrc
-.idea
-bin/
-ui.sketch
-.gitignore
