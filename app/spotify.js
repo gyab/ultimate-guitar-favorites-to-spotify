@@ -6,14 +6,18 @@ const scopes = ['playlist-read-private','playlist-modify-private'];
 
 let windowEventAttached = false;
 let userInfos = {};
-let songsArr = []
+let songsArr = null;
 let playlistName = "";
 let onSuccessUGtoSpotify = null;
 
 /**
  * Init the application. Only exported function of the file.
+ * @param  {[type]} pPlaylistName         [description]
+ * @param  {[type]} pOnSuccessUGtoSpotify [description]
+ * @return {[type]}                       [description]
  */
 export function init(pPlaylistName, pOnSuccessUGtoSpotify) {
+    songsArr = [];
     playlistName = pPlaylistName;
     onSuccessUGtoSpotify = pOnSuccessUGtoSpotify;
     login(function(accessToken) {
@@ -75,7 +79,7 @@ function getData(pSongsArr) {
         }
 
         //simulate click to get all the songs
-        $("#pager_left").find("a")[1].click();
+        $("#pager_left").find("a")[2].click();
 
         //For each td, get the artist and song data
         $('tr:regex(tabindex,-1)').each(function() {
@@ -136,6 +140,10 @@ function createPlaylist(pAccessToken, pID) {
     .then((json) => {
         getTrack(pAccessToken, json['id'], songsArr);
     })
+    .catch(function(err) {
+       console.log(err);
+       onSuccessUGtoSpotify(false);
+    });
 }
 
 /**
@@ -167,6 +175,10 @@ function getTrack(pAccessToken, pPlaylistID, pSongsArr) {
                     if(json.tracks !== undefined && json.tracks.items[0] !== undefined)
                         arrID.uris.push(json.tracks.items[0].uri);
                     return resolve('success');
+                })
+                .catch(function(err) {
+                   console.log(err);
+                   onSuccessUGtoSpotify(false);
                 });
             })
         }
@@ -175,19 +187,28 @@ function getTrack(pAccessToken, pPlaylistID, pSongsArr) {
     let s = songsTasks[0]();
     
     for(var i = 1; i < songsTasks.length; i++) {
-        s = s.then(songsTasks[i]);
+        s = s.
+            then(songsTasks[i])
+            .catch(function(err) {
+               console.log(err);
+               onSuccessUGtoSpotify(false);
+            });
     }
 
     s.then(function() {
+
         let nbAdd = Math.floor(arrID.uris.length / 100) + 1;
         
         for(let i = 0; i < nbAdd; i++) {
             let arrToAdd = JSON.stringify(arrID.uris.splice(0,99));
             addToPlaylist(pAccessToken, userInfos.id, pPlaylistID, arrToAdd);
         }
+    })
+    .then(() => onSuccessUGtoSpotify(true))
+    .catch(function(err) {
+       console.log(err);
+       onSuccessUGtoSpotify(false);
     });
-
-    s.then(() => onSuccessUGtoSpotify());
 
 }
 
@@ -210,6 +231,10 @@ function addToPlaylist(accessToken, userID, playlistID, idTracks) {
     .then(() => {
         //document.getElementById('block').innerHTML = "<style>#block{position:relative;height:100%;width:100%; background:url(https://antoinemary.com/media/thumb_up-128.png) no-repeat;background-size:auto 100%}</style>";
         //$("#block").fadeOut(3000);
+    })
+    .catch(function(err) {
+       console.log(err);
+       onSuccessUGtoSpotify(false);
     });
 }
 
@@ -232,12 +257,11 @@ function getUserData(accessToken, callback) {
     .then(function(json) {
         userInfos = json;
     })
-    .then(getData(songsArr))
-    .then(function() {
-        createPlaylist(accessToken, userInfos.id);
-    })
+    .then(() => getData(songsArr))
+    .then(() => createPlaylist(accessToken, userInfos.id))
     .catch(function(err) {
-       console.log(err); 
+       console.log(err);
+       onSuccessUGtoSpotify(false);
     });
 }
 

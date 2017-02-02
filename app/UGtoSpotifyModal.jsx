@@ -11,36 +11,48 @@ export default class UGtoSpotifyModal extends React.Component {
     this.state = {
       showModal: false,
       inProgress: false,
-      playlistCreationSuccess: false,
+      playlistCreationSuccess: null,
       inputValue: ''
     };
     
     this.handleOpenModal = this.handleOpenModal.bind(this);
-    this.handleCloseModal = this.handleCloseModal.bind(this);
     this.onInputChange = this.onInputChange.bind(this);
     this.spotifyInit = this.spotifyInit.bind(this);
     this.onSuccessUGtoSpotify = this.onSuccessUGtoSpotify.bind(this)
+    this.closeModal = this.closeModal.bind(this);
+
   }
   
   handleOpenModal () {
     this.setState({showModal: true});
   }
   
-  handleCloseModal () {
-    this.setState({showModal: false, playlistCreationSuccess: false});
-  }
-
   onInputChange(event) {
     this.setState({inputValue: event.target.value});
   }
 
   spotifyInit() {
-    spotify.init(this.state.inputValue, this.onSuccessUGtoSpotify);
+    window.addEventListener("beforeunload", this.handlerUnloadEvent);
     this.setState({inProgress: true});
+    spotify.init(this.state.inputValue, this.onSuccessUGtoSpotify);
   }
 
-  onSuccessUGtoSpotify() {
-    this.setState({playlistCreationSuccess: true, inProgress: false});
+  handlerUnloadEvent(e) {
+    var confirmationMessage = "\o/";
+    e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
+    return confirmationMessage;
+  }    
+
+  onSuccessUGtoSpotify(pStatus) {
+    window.removeEventListener('beforeunload', this.handlerUnloadEvent);
+    if(pStatus === true)
+      this.setState({playlistCreationSuccess: true, inProgress: false});
+    else
+      this.setState({playlistCreationSuccess: false, inProgress: false});
+  }
+
+  closeModal() {
+    this.setState({showModal: false, playlistCreationSuccess: null});
   }
 
   render () {
@@ -103,9 +115,13 @@ export default class UGtoSpotifyModal extends React.Component {
     let loader = null;
     let text = null;
 
-    if(this.state.playlistCreationSuccess) {
+    if(this.state.playlistCreationSuccess === true) {
       text = <p style={modalText}>Your playlist has been created.</p>
-      button = <button style={modalButton} onClick={this.handleCloseModal}>Close</button>;
+      button = <button style={modalButton} onClick={this.closeModal}>Close</button>;
+    }
+    else if(this.state.playlistCreationSuccess === false) {
+      text = <p style={modalText}>An error has occured, please close this window and try again.</p>
+      button = <button style={modalButton} onClick={this.closeModal}>Close</button>;
     }
     else if(this.state.inProgress) {
       loader = <Loader color="#6BC100" size="60px"/>
@@ -120,6 +136,8 @@ export default class UGtoSpotifyModal extends React.Component {
       <div className="modal">
         <button className="modal__open-button" onClick={this.handleOpenModal}></button>
         <ReactModal 
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
           isOpen={this.state.showModal}
           style={modal}
           contentLabel="UGtoSpotify Modal"

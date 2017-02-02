@@ -10177,14 +10177,18 @@ const scopes = ['playlist-read-private','playlist-modify-private'];
 
 let windowEventAttached = false;
 let userInfos = {};
-let songsArr = []
+let songsArr = null;
 let playlistName = "";
 let onSuccessUGtoSpotify = null;
 
 /**
  * Init the application. Only exported function of the file.
+ * @param  {[type]} pPlaylistName         [description]
+ * @param  {[type]} pOnSuccessUGtoSpotify [description]
+ * @return {[type]}                       [description]
  */
 function init(pPlaylistName, pOnSuccessUGtoSpotify) {
+    songsArr = [];
     playlistName = pPlaylistName;
     onSuccessUGtoSpotify = pOnSuccessUGtoSpotify;
     login(function(accessToken) {
@@ -10246,7 +10250,7 @@ function getData(pSongsArr) {
         }
 
         //simulate click to get all the songs
-        $("#pager_left").find("a")[1].click();
+        $("#pager_left").find("a")[2].click();
 
         //For each td, get the artist and song data
         $('tr:regex(tabindex,-1)').each(function() {
@@ -10307,6 +10311,10 @@ function createPlaylist(pAccessToken, pID) {
     .then((json) => {
         getTrack(pAccessToken, json['id'], songsArr);
     })
+    .catch(function(err) {
+       console.log(err);
+       onSuccessUGtoSpotify(false);
+    });
 }
 
 /**
@@ -10338,6 +10346,10 @@ function getTrack(pAccessToken, pPlaylistID, pSongsArr) {
                     if(json.tracks !== undefined && json.tracks.items[0] !== undefined)
                         arrID.uris.push(json.tracks.items[0].uri);
                     return resolve('success');
+                })
+                .catch(function(err) {
+                   console.log(err);
+                   onSuccessUGtoSpotify(false);
                 });
             })
         }
@@ -10346,19 +10358,28 @@ function getTrack(pAccessToken, pPlaylistID, pSongsArr) {
     let s = songsTasks[0]();
     
     for(var i = 1; i < songsTasks.length; i++) {
-        s = s.then(songsTasks[i]);
+        s = s.
+            then(songsTasks[i])
+            .catch(function(err) {
+               console.log(err);
+               onSuccessUGtoSpotify(false);
+            });
     }
 
     s.then(function() {
+
         let nbAdd = Math.floor(arrID.uris.length / 100) + 1;
         
         for(let i = 0; i < nbAdd; i++) {
             let arrToAdd = JSON.stringify(arrID.uris.splice(0,99));
             addToPlaylist(pAccessToken, userInfos.id, pPlaylistID, arrToAdd);
         }
+    })
+    .then(() => onSuccessUGtoSpotify(true))
+    .catch(function(err) {
+       console.log(err);
+       onSuccessUGtoSpotify(false);
     });
-
-    s.then(() => onSuccessUGtoSpotify());
 
 }
 
@@ -10381,6 +10402,10 @@ function addToPlaylist(accessToken, userID, playlistID, idTracks) {
     .then(() => {
         //document.getElementById('block').innerHTML = "<style>#block{position:relative;height:100%;width:100%; background:url(https://antoinemary.com/media/thumb_up-128.png) no-repeat;background-size:auto 100%}</style>";
         //$("#block").fadeOut(3000);
+    })
+    .catch(function(err) {
+       console.log(err);
+       onSuccessUGtoSpotify(false);
     });
 }
 
@@ -10403,12 +10428,11 @@ function getUserData(accessToken, callback) {
     .then(function(json) {
         userInfos = json;
     })
-    .then(getData(songsArr))
-    .then(function() {
-        createPlaylist(accessToken, userInfos.id);
-    })
+    .then(() => getData(songsArr))
+    .then(() => createPlaylist(accessToken, userInfos.id))
     .catch(function(err) {
-       console.log(err); 
+       console.log(err);
+       onSuccessUGtoSpotify(false);
     });
 }
 
@@ -10451,15 +10475,16 @@ var UGtoSpotifyModal = function (_React$Component) {
     _this.state = {
       showModal: false,
       inProgress: false,
-      playlistCreationSuccess: false,
+      playlistCreationSuccess: null,
       inputValue: ''
     };
 
     _this.handleOpenModal = _this.handleOpenModal.bind(_this);
-    _this.handleCloseModal = _this.handleCloseModal.bind(_this);
     _this.onInputChange = _this.onInputChange.bind(_this);
     _this.spotifyInit = _this.spotifyInit.bind(_this);
     _this.onSuccessUGtoSpotify = _this.onSuccessUGtoSpotify.bind(_this);
+    _this.closeModal = _this.closeModal.bind(_this);
+
     return _this;
   }
 
@@ -10469,11 +10494,6 @@ var UGtoSpotifyModal = function (_React$Component) {
       this.setState({ showModal: true });
     }
   }, {
-    key: 'handleCloseModal',
-    value: function handleCloseModal() {
-      this.setState({ showModal: false, playlistCreationSuccess: false });
-    }
-  }, {
     key: 'onInputChange',
     value: function onInputChange(event) {
       this.setState({ inputValue: event.target.value });
@@ -10481,13 +10501,27 @@ var UGtoSpotifyModal = function (_React$Component) {
   }, {
     key: 'spotifyInit',
     value: function spotifyInit() {
-      spotify.init(this.state.inputValue, this.onSuccessUGtoSpotify);
+      window.addEventListener("beforeunload", this.handlerUnloadEvent);
       this.setState({ inProgress: true });
+      spotify.init(this.state.inputValue, this.onSuccessUGtoSpotify);
+    }
+  }, {
+    key: 'handlerUnloadEvent',
+    value: function handlerUnloadEvent(e) {
+      var confirmationMessage = "\o/";
+      e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
+      return confirmationMessage;
     }
   }, {
     key: 'onSuccessUGtoSpotify',
-    value: function onSuccessUGtoSpotify() {
-      this.setState({ playlistCreationSuccess: true, inProgress: false });
+    value: function onSuccessUGtoSpotify(pStatus) {
+      window.removeEventListener('beforeunload', this.handlerUnloadEvent);
+      if (pStatus === true) this.setState({ playlistCreationSuccess: true, inProgress: false });else this.setState({ playlistCreationSuccess: false, inProgress: false });
+    }
+  }, {
+    key: 'closeModal',
+    value: function closeModal() {
+      this.setState({ showModal: false, playlistCreationSuccess: null });
     }
   }, {
     key: 'render',
@@ -10551,7 +10585,7 @@ var UGtoSpotifyModal = function (_React$Component) {
       var loader = null;
       var text = null;
 
-      if (this.state.playlistCreationSuccess) {
+      if (this.state.playlistCreationSuccess === true) {
         text = React.createElement(
           'p',
           { style: modalText },
@@ -10559,7 +10593,18 @@ var UGtoSpotifyModal = function (_React$Component) {
         );
         button = React.createElement(
           'button',
-          { style: modalButton, onClick: this.handleCloseModal },
+          { style: modalButton, onClick: this.closeModal },
+          'Close'
+        );
+      } else if (this.state.playlistCreationSuccess === false) {
+        text = React.createElement(
+          'p',
+          { style: modalText },
+          'An error has occured, please close this window and try again.'
+        );
+        button = React.createElement(
+          'button',
+          { style: modalButton, onClick: this.closeModal },
           'Close'
         );
       } else if (this.state.inProgress) {
@@ -10585,6 +10630,8 @@ var UGtoSpotifyModal = function (_React$Component) {
         React.createElement(
           ReactModal,
           {
+            onAfterOpen: this.afterOpenModal,
+            onRequestClose: this.closeModal,
             isOpen: this.state.showModal,
             style: modal,
             contentLabel: 'UGtoSpotify Modal'
@@ -10617,7 +10664,7 @@ exports = module.exports = __webpack_require__(87)();
 
 
 // module
-exports.push([module.i, ".modal {\n\tposition:absolute;\n\theight:100px;\n\twidth:100px;\n\ttop:45%;\n\tleft:10%;\n\tborder:0;\n\tmargin-left:-50px;\n}\n\n.modal__open-button {\n\tbackground:url(https://antoinemary.com/media/icon128.png) no-repeat;\n\tbackground-size:auto 100%;\n\twidth:100%;\n\theight:100%;\n\ttop:85px;\n\tborder:0;\n}\n\n.modal__button-disabled:disabled {\n\topacity: 0.5;\n}\n\n.loader {\n    position: relative;\n    height: 100%;\n    width: 100%;\n    text-align: center;\n    vertical-align: middle;\n    line-height: 50px;\n    margin: 100px auto;\n    font-size: 12px;\n    width: 1em;\n    height: 1em;\n    border-radius: 50%;\n    text-indent: -9999em;\n    -webkit-animation: load5 1.1s infinite ease;\n    animation: load5 1.1s infinite ease;\n    -webkit-transform: translateZ(0);\n    -ms-transform: translateZ(0);\n    transform: translateZ(0)\n}\n@-webkit-keyframes load5 {\n    0%, 100% {\n        box-shadow: 0 -2.6em 0 0 #fff, 1.8em -1.8em 0 0 rgba(255, 255, 255, .2), 2.5em 0 0 0 rgba(255, 255, 255, .2), 1.75em 1.75em 0 0 rgba(255, 255, 255, .2), 0 2.5em 0 0 rgba(255, 255, 255, .2), -1.8em 1.8em 0 0 rgba(255, 255, 255, .2), -2.6em 0 0 0 rgba(255, 255, 255, .5), -1.8em -1.8em 0 0 rgba(255, 255, 255, .7)\n    }\n    12.5% {\n        box-shadow: 0 -2.6em 0 0 rgba(255, 255, 255, .7), 1.8em -1.8em 0 0 #fff, 2.5em 0 0 0 rgba(255, 255, 255, .2), 1.75em 1.75em 0 0 rgba(255, 255, 255, .2), 0 2.5em 0 0 rgba(255, 255, 255, .2), -1.8em 1.8em 0 0 rgba(255, 255, 255, .2), -2.6em 0 0 0 rgba(255, 255, 255, .2), -1.8em -1.8em 0 0 rgba(255, 255, 255, .5)\n    }\n    25% {\n        box-shadow: 0 -2.6em 0 0 rgba(255, 255, 255, .5), 1.8em -1.8em 0 0 rgba(255, 255, 255, .7), 2.5em 0 0 0 #fff, 1.75em 1.75em 0 0 rgba(255, 255, 255, .2), 0 2.5em 0 0 rgba(255, 255, 255, .2), -1.8em 1.8em 0 0 rgba(255, 255, 255, .2), -2.6em 0 0 0 rgba(255, 255, 255, .2), -1.8em -1.8em 0 0 rgba(255, 255, 255, .2)\n    }\n    37.5% {\n        box-shadow: 0 -2.6em 0 0 rgba(255, 255, 255, .2), 1.8em -1.8em 0 0 rgba(255, 255, 255, .5), 2.5em 0 0 0 rgba(255, 255, 255, .7), 1.75em 1.75em 0 0 rgba(255, 255, 255, .2), 0 2.5em 0 0 rgba(255, 255, 255, .2), -1.8em 1.8em 0 0 rgba(255, 255, 255, .2), -2.6em 0 0 0 rgba(255, 255, 255, .2), -1.8em -1.8em 0 0 rgba(255, 255, 255, .2)\n    }\n    50% {\n        box-shadow: 0 -2.6em 0 0 rgba(255, 255, 255, .2), 1.8em -1.8em 0 0 rgba(255, 255, 255, .2), 2.5em 0 0 0 rgba(255, 255, 255, .5), 1.75em 1.75em 0 0 rgba(255, 255, 255, .7), 0 2.5em 0 0 #fff, -1.8em 1.8em 0 0 rgba(255, 255, 255, .2), -2.6em 0 0 0 rgba(255, 255, 255, .2), -1.8em -1.8em 0 0 rgba(255, 255, 255, .2)\n    }\n    62.5% {\n        box-shadow: 0 -2.6em 0 0 rgba(255, 255, 255, .2), 1.8em -1.8em 0 0 rgba(255, 255, 255, .2), 2.5em 0 0 0 rgba(255, 255, 255, .2), 1.75em 1.75em 0 0 rgba(255, 255, 255, .5), 0 2.5em 0 0 rgba(255, 255, 255, .7), -1.8em 1.8em 0 0 #fff, -2.6em 0 0 0 rgba(255, 255, 255, .2), -1.8em -1.8em 0 0 rgba(255, 255, 255, .2)\n    }\n    75% {\n        box-shadow: 0 -2.6em 0 0 rgba(255, 255, 255, .2), 1.8em -1.8em 0 0 rgba(255, 255, 255, .2), 2.5em 0 0 0 rgba(255, 255, 255, .2), 1.75em 1.75em 0 0 rgba(255, 255, 255, .2), 0 2.5em 0 0 rgba(255, 255, 255, .5), -1.8em 1.8em 0 0 rgba(255, 255, 255, .7), -2.6em 0 0 0 #fff, -1.8em -1.8em 0 0 rgba(255, 255, 255, .2)\n    }\n    87.5% {\n        box-shadow: 0 -2.6em 0 0 rgba(255, 255, 255, .2), 1.8em -1.8em 0 0 rgba(255, 255, 255, .2), 2.5em 0 0 0 rgba(255, 255, 255, .2), 1.75em 1.75em 0 0 rgba(255, 255, 255, .2), 0 2.5em 0 0 rgba(255, 255, 255, .2), -1.8em 1.8em 0 0 rgba(255, 255, 255, .5), -2.6em 0 0 0 rgba(255, 255, 255, .7), -1.8em -1.8em 0 0 #fff\n    }\n}\n@keyframes load5 {\n    0%, 100% {\n        box-shadow: 0 -2.6em 0 0 #fff, 1.8em -1.8em 0 0 rgba(255, 255, 255, .2), 2.5em 0 0 0 rgba(255, 255, 255, .2), 1.75em 1.75em 0 0 rgba(255, 255, 255, .2), 0 2.5em 0 0 rgba(255, 255, 255, .2), -1.8em 1.8em 0 0 rgba(255, 255, 255, .2), -2.6em 0 0 0 rgba(255, 255, 255, .5), -1.8em -1.8em 0 0 rgba(255, 255, 255, .7)\n    }\n    12.5% {\n        box-shadow: 0 -2.6em 0 0 rgba(255, 255, 255, .7), 1.8em -1.8em 0 0 #fff, 2.5em 0 0 0 rgba(255, 255, 255, .2), 1.75em 1.75em 0 0 rgba(255, 255, 255, .2), 0 2.5em 0 0 rgba(255, 255, 255, .2), -1.8em 1.8em 0 0 rgba(255, 255, 255, .2), -2.6em 0 0 0 rgba(255, 255, 255, .2), -1.8em -1.8em 0 0 rgba(255, 255, 255, .5)\n    }\n    25% {\n        box-shadow: 0 -2.6em 0 0 rgba(255, 255, 255, .5), 1.8em -1.8em 0 0 rgba(255, 255, 255, .7), 2.5em 0 0 0 #fff, 1.75em 1.75em 0 0 rgba(255, 255, 255, .2), 0 2.5em 0 0 rgba(255, 255, 255, .2), -1.8em 1.8em 0 0 rgba(255, 255, 255, .2), -2.6em 0 0 0 rgba(255, 255, 255, .2), -1.8em -1.8em 0 0 rgba(255, 255, 255, .2)\n    }\n    37.5% {\n        box-shadow: 0 -2.6em 0 0 rgba(255, 255, 255, .2), 1.8em -1.8em 0 0 rgba(255, 255, 255, .5), 2.5em 0 0 0 rgba(255, 255, 255, .7), 1.75em 1.75em 0 0 rgba(255, 255, 255, .2), 0 2.5em 0 0 rgba(255, 255, 255, .2), -1.8em 1.8em 0 0 rgba(255, 255, 255, .2), -2.6em 0 0 0 rgba(255, 255, 255, .2), -1.8em -1.8em 0 0 rgba(255, 255, 255, .2)\n    }\n    50% {\n        box-shadow: 0 -2.6em 0 0 rgba(255, 255, 255, .2), 1.8em -1.8em 0 0 rgba(255, 255, 255, .2), 2.5em 0 0 0 rgba(255, 255, 255, .5), 1.75em 1.75em 0 0 rgba(255, 255, 255, .7), 0 2.5em 0 0 #fff, -1.8em 1.8em 0 0 rgba(255, 255, 255, .2), -2.6em 0 0 0 rgba(255, 255, 255, .2), -1.8em -1.8em 0 0 rgba(255, 255, 255, .2)\n    }\n    62.5% {\n        box-shadow: 0 -2.6em 0 0 rgba(255, 255, 255, .2), 1.8em -1.8em 0 0 rgba(255, 255, 255, .2), 2.5em 0 0 0 rgba(255, 255, 255, .2), 1.75em 1.75em 0 0 rgba(255, 255, 255, .5), 0 2.5em 0 0 rgba(255, 255, 255, .7), -1.8em 1.8em 0 0 #fff, -2.6em 0 0 0 rgba(255, 255, 255, .2), -1.8em -1.8em 0 0 rgba(255, 255, 255, .2)\n    }\n    75% {\n        box-shadow: 0 -2.6em 0 0 rgba(255, 255, 255, .2), 1.8em -1.8em 0 0 rgba(255, 255, 255, .2), 2.5em 0 0 0 rgba(255, 255, 255, .2), 1.75em 1.75em 0 0 rgba(255, 255, 255, .2), 0 2.5em 0 0 rgba(255, 255, 255, .5), -1.8em 1.8em 0 0 rgba(255, 255, 255, .7), -2.6em 0 0 0 #fff, -1.8em -1.8em 0 0 rgba(255, 255, 255, .2)\n    }\n    87.5% {\n        box-shadow: 0 -2.6em 0 0 rgba(255, 255, 255, .2), 1.8em -1.8em 0 0 rgba(255, 255, 255, .2), 2.5em 0 0 0 rgba(255, 255, 255, .2), 1.75em 1.75em 0 0 rgba(255, 255, 255, .2), 0 2.5em 0 0 rgba(255, 255, 255, .2), -1.8em 1.8em 0 0 rgba(255, 255, 255, .5), -2.6em 0 0 0 rgba(255, 255, 255, .7), -1.8em -1.8em 0 0 #fff\n    }\n}", ""]);
+exports.push([module.i, ".modal {\n\tposition:absolute;\n\theight:100px;\n\twidth:100px;\n\ttop:45%;\n\tleft:10%;\n\tborder:0;\n\tmargin-left:-50px;\n}\n\n.modal__open-button {\n\tbackground:url(https://antoinemary.com/media/icon128.png) no-repeat;\n\tbackground-size:auto 100%;\n\twidth:100%;\n\theight:100%;\n\ttop:85px;\n\tborder:0;\n}\n\n.modal__button-disabled:disabled {\n\topacity: 0.5;\n}", ""]);
 
 // exports
 
