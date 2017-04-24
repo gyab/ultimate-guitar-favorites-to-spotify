@@ -2,7 +2,7 @@ require("./style.css");
 let React = require('react');
 let spotify = require('./spotify');
 let ReactDOM = require('react-dom');
-let ReactModal = require('react-modal')
+let ReactModal = require('react-modal');
 let Loader = require('halogen/ClipLoader');
 
 export default class UGtoSpotifyModal extends React.Component {
@@ -38,8 +38,8 @@ export default class UGtoSpotifyModal extends React.Component {
   }
 
   handlerUnloadEvent(e) {
-    var confirmationMessage = "\o/";
-    e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
+    let confirmationMessage = "\o/";
+    e.returnValue = confirmationMessage;
     return confirmationMessage;
   }    
 
@@ -58,22 +58,25 @@ export default class UGtoSpotifyModal extends React.Component {
   render () {
 
     let modal = {
-      content: {
-        'top': 'calc(50% - 150px)',
-        'left': 'calc(50% - 200px)',
-        'boxSizing': 'border-box',
-        'textAlign': 'center',
-        'display': 'flex',
-        'flexDirection': 'column',
-        'justifyContent': 'space-around',
-        'backgroundColor': 'white',
-        'borderRadius': '10px',
-        'width': '400px',
-        'height': '300px',
-        'padding': '20px',
-        'border': '1px solid #6BC100'
-      }
-    }
+        overlay : {
+            'zIndex': '25000000'
+        },
+        content: {
+            'top': 'calc(50% - 150px)',
+            'left': 'calc(50% - 200px)',
+            'boxSizing': 'border-box',
+            'textAlign': 'center',
+            'display': 'flex',
+            'flexDirection': 'column',
+            'justifyContent': 'space-around',
+            'backgroundColor': 'white',
+            'borderRadius': '10px',
+            'width': '400px',
+            'height': '300px',
+            'padding': '20px',
+            'border': '1px solid #6BC100'
+        }
+    };
 
     let modalTitle = {
       'margin': 0,
@@ -81,7 +84,7 @@ export default class UGtoSpotifyModal extends React.Component {
       'fontSize': '25px',
       'color': '#6BC100',
       'textDecoration': 'underline'
-    }
+    };
 
     let modalInput = {
       'width': '310px',
@@ -91,12 +94,12 @@ export default class UGtoSpotifyModal extends React.Component {
       'fontSize': '15px',
       'borderRadius': '5px',
       'border': '1px solid #979797'
-    }
+    };
 
     let modalText = {
       'color': '#979797',
       'fontSize': '20px'
-    }
+    };
 
     let modalButton = {
       'width': '200px',
@@ -108,7 +111,7 @@ export default class UGtoSpotifyModal extends React.Component {
       'borderRadius': '5px',
       'fontSize': '30px',
       'textTransform': 'uppercase'
-    }
+    };
 
     let button = null;
     let input = null;
@@ -116,11 +119,11 @@ export default class UGtoSpotifyModal extends React.Component {
     let text = null;
 
     if(this.state.playlistCreationSuccess === true) {
-      text = <p style={modalText}>Your playlist has been created.</p>
+      text = <p style={modalText}>Your playlist has been created.</p>;
       button = <button style={modalButton} onClick={this.closeModal}>Close</button>;
     }
     else if(this.state.playlistCreationSuccess === false) {
-      text = <p style={modalText}>An error has occured, please close this window and try again.</p>
+      text = <p style={modalText}>An error has occured, please close this window and try again.</p>;
       button = <button style={modalButton} onClick={this.closeModal}>Close</button>;
     }
     else if(this.state.inProgress) {
@@ -128,8 +131,8 @@ export default class UGtoSpotifyModal extends React.Component {
       button = <button className="modal__button-disabled" style={modalButton} disabled>Creating...</button> 
     }
     else {
-      input = <input autoFocus style={modalInput} onChange={this.onInputChange} placeholder="Enter your new playlist's name"/>
-      button = <button className="modal__button-disabled" style={modalButton} disabled={!this.state.inputValue} onClick={this.spotifyInit}>Start</button>
+      input = <input autoFocus style={modalInput} onChange={this.onInputChange} placeholder="Enter your new playlist's name"/>;
+      button = <button className="modal__button-disabled" style={modalButton} disabled={!this.state.inputValue} onClick={this.spotifyInit}>Start</button>;
     }
 
     return (

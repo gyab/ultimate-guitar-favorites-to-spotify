@@ -63,35 +63,23 @@ function login(callback) {
 function getData(pSongsArr) {
 
     return new Promise(function(resolve, reject) {
-    
-        //get html element based on regex (code from http://james.padolsey.com/snippets/regex-selector-for-jquery/)
-        $.expr[':'].regex = function(elem, index, match) {
-            let matchParams = match[3].split(','),
-                validLabels = /^(data|css):/,
-                attr = {
-                    method: matchParams[0].match(validLabels) ?
-                        matchParams[0].split(':')[0] : 'attr',
-                    property: matchParams.shift().replace(validLabels, '')
-                },
-                regexFlags = 'ig',
-                regex = new RegExp(matchParams.join('').replace(/^s+|s+$/g, ''), regexFlags);
-            return regex.test($(elem)[attr.method](attr.property));
-        }
 
         //simulate click to get all the songs
-        $("#pager_left").find("a")[2].click();
+        $("li[data-type='all']").click()
 
         //For each td, get the artist and song data
-        $('tr:regex(tabindex,-1)').each(function() {
-            let artist = $(this).find('td:nth-child(3)').text() ? $(this).find('td:nth-child(3)').text() : pSongsArr[pSongsArr.length - 1][0]
+        $('tr').find('.tr__lg.tr__actionable.js-favorite').each(function() {
+            let artist = $(this).find('td:nth-child(1)').text() ? $(this).find('td:nth-child(1)').text() : pSongsArr[pSongsArr.length - 1][0];
             pSongsArr.push([
-                artist,
-                $(this).find('td:nth-child(4)').text()
-                .replace(" Acoustic", '')
-                .replace(" Chords", '')
-                .replace(" Tab", '')
-                .replace(" Ukulele", '')
-                .replace(/\s\(ver \d+\)/, "")
+                artist.trim(),
+                $(this).find('td:nth-child(2)')
+                    .text()
+                    .replace(" Acoustic", '')
+                    .replace(" Chords", '')
+                    .replace(" Tab", '')
+                    .replace(" Ukulele", '')
+                    .replace(/\s*\(ver\s\d+\)\s*/, "")
+                    .trim()
             ]);
         });
 
@@ -172,7 +160,7 @@ function getTrack(pAccessToken, pPlaylistID, pSongsArr) {
                     });
                 })
                 .then(function(json) {
-                    if(json.tracks !== undefined && json.tracks.items[0] !== undefined)
+                    if(typeof json.tracks !== 'undefined' && typeof json.tracks.items[0] !== 'undefined')
                         arrID.uris.push(json.tracks.items[0].uri);
                     return resolve('success');
                 })

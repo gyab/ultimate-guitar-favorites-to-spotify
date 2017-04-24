@@ -1,11 +1,11 @@
 {
   "manifest_version": 2,
-  "version": "1.4",
+  "version": "1.5",
   "icons": { "128": "icon128.png" },
   "name": "Utimate Guitar Favorites to Spotify",
   "description": "Creates a Spotify playlist based on one Ultimate Guitar favorites tabs",
   "content_scripts": [ {
-    "matches": [ "http://my.ultimate-guitar.com/main.php?mode=favorites" ],
+    "matches": [ "https://www.ultimate-guitar.com/user/favorite" ],
     "js": [ "app.js" ],
     "run_at": "document_end"
   }],
