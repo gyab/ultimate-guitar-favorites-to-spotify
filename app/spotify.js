@@ -26,7 +26,7 @@ export function init(pPlaylistName, pOnSuccessUGtoSpotify) {
 };
 
 /**
- * Log to Spotify account to get specific rights 
+ * Log to Spotify account to get specific rights
  * @param  {Function} callback
  * @return {String} accessToken - Spotify API token
  */
@@ -40,9 +40,16 @@ function login(callback) {
 
     if(!windowEventAttached) {
         window.addEventListener("message", function(event) {
-            let hash = JSON.parse(event.data);
-            if (hash.type === 'access_token') {
-                callback(hash.access_token);
+            if (typeof event.data === 'string') {
+                try {
+                    let hash = JSON.parse(event.data);
+                    if (hash.type === 'access_token') {
+                        callback(hash.access_token);
+                    }
+                } catch (e) {
+                    // event.data is not a valid JSON
+                }
+
             }
         });
 
@@ -56,7 +63,7 @@ function login(callback) {
 
 }
 
- /**
+/**
  * Get user's favorites songs from http://my.ultimate-guitar.com/main.php?mode=favorites
  * @return {Array} songs - artist and name of the song
  */
@@ -72,7 +79,7 @@ function getData(pSongsArr) {
             let artist = $(this).find('td:nth-child(1)').text() ? $(this).find('td:nth-child(1)').text() : pSongsArr[pSongsArr.length - 1][0];
             pSongsArr.push([
                 artist.trim(),
-                $(this).find('td:nth-child(2)')
+                $(this).find('td:nth-child(2) a')
                     .text()
                     .replace(" Acoustic", '')
                     .replace(" Chords", '')
@@ -103,35 +110,35 @@ function getLoginURL(pClientID, pRedirectURI, pScopes) {
         '&response_type=token';
 }
 
- /**
+/**
  * Create the Spotify playlist
  * @param {String} pAccessToken - Spotify API token
  * @param {String} pID - Spotify user ID
  */
 function createPlaylist(pAccessToken, pID) {
     fetch("https://api.spotify.com/v1/users/" + pID + "/playlists",
-    {
-        method: "POST",
-        body: JSON.stringify({
-            "name": playlistName,
-            "public": false
-        }),
-        headers: {
-            "Authorization": "Bearer " + pAccessToken,
-        }
-    })
-    .then(function(response) {
-        return response.json(function(resolve, reject) {
-            resolve('success');
+        {
+            method: "POST",
+            body: JSON.stringify({
+                "name": playlistName,
+                "public": false
+            }),
+            headers: {
+                "Authorization": "Bearer " + pAccessToken,
+            }
+        })
+        .then(function(response) {
+            return response.json(function(resolve, reject) {
+                resolve('success');
+            });
+        })
+        .then((json) => {
+            getTrack(pAccessToken, json['id'], songsArr);
+        })
+        .catch(function(err) {
+            console.log(err);
+            onSuccessUGtoSpotify(false);
         });
-    })
-    .then((json) => {
-        getTrack(pAccessToken, json['id'], songsArr);
-    })
-    .catch(function(err) {
-       console.log(err);
-       onSuccessUGtoSpotify(false);
-    });
 }
 
 /**
@@ -148,55 +155,55 @@ function getTrack(pAccessToken, pPlaylistID, pSongsArr) {
         return function() {
             return new Promise(function(resolve, reject) {
                 let returnValue;
-                fetch('https://api.spotify.com/v1/search?q=' + song[0] + ' ' + song[1] +'&type=track', 
-                {
-                    headers: {
-                        'Authorization': 'Bearer ' + pAccessToken,
-                    }
-                })
-                .then(function(response) {
-                    return response.json(function(resolve, reject) {
-                        resolve('success');
+                fetch('https://api.spotify.com/v1/search?q=' + song[0] + ' ' + song[1] +'&type=track',
+                    {
+                        headers: {
+                            'Authorization': 'Bearer ' + pAccessToken,
+                        }
+                    })
+                    .then(function(response) {
+                        return response.json(function(resolve, reject) {
+                            resolve('success');
+                        });
+                    })
+                    .then(function(json) {
+                        if(typeof json.tracks !== 'undefined' && typeof json.tracks.items[0] !== 'undefined')
+                            arrID.uris.push(json.tracks.items[0].uri);
+                        return resolve('success');
+                    })
+                    .catch(function(err) {
+                        console.log(err);
+                        onSuccessUGtoSpotify(false);
                     });
-                })
-                .then(function(json) {
-                    if(typeof json.tracks !== 'undefined' && typeof json.tracks.items[0] !== 'undefined')
-                        arrID.uris.push(json.tracks.items[0].uri);
-                    return resolve('success');
-                })
-                .catch(function(err) {
-                   console.log(err);
-                   onSuccessUGtoSpotify(false);
-                });
             })
         }
-    })
+    });
 
     let s = songsTasks[0]();
-    
+
     for(var i = 1; i < songsTasks.length; i++) {
         s = s.
-            then(songsTasks[i])
+        then(songsTasks[i])
             .catch(function(err) {
-               console.log(err);
-               onSuccessUGtoSpotify(false);
+                console.log(err);
+                onSuccessUGtoSpotify(false);
             });
     }
 
     s.then(function() {
 
         let nbAdd = Math.floor(arrID.uris.length / 100) + 1;
-        
+
         for(let i = 0; i < nbAdd; i++) {
             let arrToAdd = JSON.stringify(arrID.uris.splice(0,99));
             addToPlaylist(pAccessToken, userInfos.id, pPlaylistID, arrToAdd);
         }
     })
-    .then(() => onSuccessUGtoSpotify(true))
-    .catch(function(err) {
-       console.log(err);
-       onSuccessUGtoSpotify(false);
-    });
+        .then(() => onSuccessUGtoSpotify(true))
+        .catch(function(err) {
+            console.log(err);
+            onSuccessUGtoSpotify(false);
+        });
 
 }
 
@@ -209,47 +216,47 @@ function getTrack(pAccessToken, pPlaylistID, pSongsArr) {
  */
 function addToPlaylist(accessToken, userID, playlistID, idTracks) {
     fetch("https://api.spotify.com/v1/users/" + userID + "/playlists/" + playlistID + "/tracks/",
-    {
-        method: "POST",
-        body: idTracks,
-        headers: {
-            'Authorization': 'Bearer ' + accessToken
-        },
-    })
-    .then(() => {
-        //document.getElementById('block').innerHTML = "<style>#block{position:relative;height:100%;width:100%; background:url(https://antoinemary.com/media/thumb_up-128.png) no-repeat;background-size:auto 100%}</style>";
-        //$("#block").fadeOut(3000);
-    })
-    .catch(function(err) {
-       console.log(err);
-       onSuccessUGtoSpotify(false);
-    });
+        {
+            method: "POST",
+            body: idTracks,
+            headers: {
+                'Authorization': 'Bearer ' + accessToken
+            },
+        })
+        .then(() => {
+            //document.getElementById('block').innerHTML = "<style>#block{position:relative;height:100%;width:100%; background:url(https://antoinemary.com/media/thumb_up-128.png) no-repeat;background-size:auto 100%}</style>";
+            //$("#block").fadeOut(3000);
+        })
+        .catch(function(err) {
+            console.log(err);
+            onSuccessUGtoSpotify(false);
+        });
 }
 
 
 /**
-* Get Current User’s Profile
-* @param  {String} accessToken - Spotify API token
-*/
+ * Get Current User’s Profile
+ * @param  {String} accessToken - Spotify API token
+ */
 function getUserData(accessToken, callback) {
     fetch('https://api.spotify.com/v1/me', {
         headers: {
             'Authorization': 'Bearer ' + accessToken,
         }
     })
-    .then(function(response) {
-        return response.json(function(resolve, reject) {
-            resolve('success');
+        .then(function(response) {
+            return response.json(function(resolve, reject) {
+                resolve('success');
+            });
+        })
+        .then(function(json) {
+            userInfos = json;
+        })
+        .then(() => getData(songsArr))
+        .then(() => createPlaylist(accessToken, userInfos.id))
+        .catch(function(err) {
+            console.log(err);
+            onSuccessUGtoSpotify(false);
         });
-    })
-    .then(function(json) {
-        userInfos = json;
-    })
-    .then(() => getData(songsArr))
-    .then(() => createPlaylist(accessToken, userInfos.id))
-    .catch(function(err) {
-       console.log(err);
-       onSuccessUGtoSpotify(false);
-    });
 }
 
