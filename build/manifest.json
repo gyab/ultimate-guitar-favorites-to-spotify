@@ -5,7 +5,7 @@
   "name": "Utimate Guitar Favorites to Spotify",
   "description": "Creates a Spotify playlist based on one Ultimate Guitar favorites tabs",
   "content_scripts": [ {
-    "matches": [ "https://www.ultimate-guitar.com/user/favorite" ],
+    "matches": [ "https://www.ultimate-guitar.com/user/mytabs" ],
     "js": [ "app.js" ],
     "run_at": "document_end"
   }],
