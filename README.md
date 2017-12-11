@@ -1,10 +1,26 @@
-# ultimate-guitar-favorites-to-spotify
+# Utimate Guitar Favorites to Spotify
 
-Creates a Spotify playlist based on your Ultimate Guitar favorites.
+Easily export your Ultimate Guitar favorite tabs to your Spotify.
+
 
 [Download on Chrome Store](https://chrome.google.com/webstore/detail/utimate-guitar-favorites/jhadlgfdcpedmbohiknkbnfmpiaccocl)
 
-To do :
+#### To run locally
+
+```
+$ npm install
+```
+
+then
+
+```
+$ npm build
+```
+
+Once is done, all you'll need to do is adding all the files located in the **build** folder to Chrome
+([detailed explanations](https://developer.chrome.com/extensions/getstarted#unpacked)).
+
+#### To Do List
 - [ ] If the playlist has already been created, get all the songs and compute the delta with the current content of the UG favorites webpage
 - [x] Supports UG favorites webpage with over 100 tabs
 - [x] Add to Chrome Store

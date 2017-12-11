@@ -35,8 +35,10 @@
     "webpack-validator": "^2.3.0"
   },
   "dependencies": {
+    "dotenv": "^4.0.0",
     "halogen": "^0.2.0",
     "handlebars": "^4.0.6",
+    "jquery": "^3.2.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-modal": "^1.6.5"
