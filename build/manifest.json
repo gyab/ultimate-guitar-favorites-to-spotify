@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
-  "version": "1.5.3",
+  "version": "1.5.4",
   "icons": { "128": "icon128.png" },
   "name": "Utimate Guitar Favorites to Spotify",
-  "description": "Easily export your Ultimate Guitar favorite tabs to your Spotify",
+  "description": "Easily export your Ultimate Guitar favorite songs to your Spotify",
   "content_scripts": [ {
     "matches": [ "https://www.ultimate-guitar.com/user/mytabs" ],
     "js": [ "app.js" ],
