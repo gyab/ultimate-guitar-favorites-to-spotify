@@ -13,7 +13,7 @@ const ARTIST_TEST = 'The Velvet Underground';
 const SONG_TEST = 'Sweet Jane';
 
 (async () => {
-    console.log('script start');
+    console.log(new Date() + ' script start');
     const nexmo = new Nexmo({
         apiKey: ENV.NEXMO_API_KEY,
         apiSecret: ENV.NEXMO_API_SECRET
@@ -44,6 +44,6 @@ const SONG_TEST = 'Sweet Jane';
         nexmo.message.sendsms(from, to, text);
         console.log('error, message sent');
     }
-    console.log('script ended');
     await browser.close();
+    console.log(new Date() + ' script ended');
 })();
