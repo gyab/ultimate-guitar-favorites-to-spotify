@@ -1,5 +1,6 @@
 .modal {
 	position:absolute;
+    z-index: 123456;
 	height:100px;
 	width:100px;
 	top:45%;

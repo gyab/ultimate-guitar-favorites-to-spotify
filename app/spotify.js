@@ -72,16 +72,20 @@ function getData(pSongsArr) {
     return new Promise(function(resolve, reject) {
 
         //simulate click to get all the songs
-        $("li[data-type='all']").click()
+        const pageButtons = document.querySelectorAll(".kRvt3");
+        for(const button in pageButtons) {
+            if (pageButtons[button].innerText === "All")
+                pageButtons[button].click();
+        }
 
-        //For each td, get the artist and song data
-        $('tr').find('.tr__lg.tr__actionable.js-favorite').each(function() {
-            let artist = $(this).find('td:nth-child(1)').text() ? $(this).find('td:nth-child(1)').text() : pSongsArr[pSongsArr.length - 1][0];
+        //For each song, get the artist and the song name
+        $("._335bj").each(function() {
+            const allLinks = $(this).find('a');
+            const artist = allLinks.length === 2 ? allLinks[0].innerText.trim() : pSongsArr[pSongsArr.length - 1][0];
+            const song = allLinks.length === 2 ? allLinks[1].innerText : allLinks[0].innerText;
             pSongsArr.push([
-                artist.trim(),
-                $(this).find('td:nth-child(2) a')
-                    .text()
-                    .replace(" Acoustic", '')
+                artist,
+                song.replace(" Acoustic", '')
                     .replace(" Chords", '')
                     .replace(" Tab", '')
                     .replace(" Ukulele", '')
