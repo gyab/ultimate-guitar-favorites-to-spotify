@@ -22,7 +22,7 @@ const nexmo = new Nexmo({
 handleError = (reason) => {
     if (production) nexmo.message.sendsms(from, to, reason);
     else console.log(reason);
-    process.exit();
+    process.exit(1);
 };
 
 (async () => {
@@ -41,7 +41,6 @@ handleError = (reason) => {
                 spans[span].click();
         }
     }).catch(handleError);
-    await page.screenshot({path: 'example.png'});
     await page.waitFor(1000).catch(handleError);
     await page.click(INPUT_USERNAME_SELECTOR).catch(handleError);
     await page.keyboard.type(ENV.username).catch(handleError);
@@ -73,3 +72,4 @@ handleError = (reason) => {
     await browser.close().catch(handleError);
     console.log(new Date() + ' script ended');
 })();
+
