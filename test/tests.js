@@ -13,8 +13,7 @@ const SONG_TEST = 'Sweet Jane';
 const production = ENV.production;
 
 handleError = (reason) => {
-    if (production) nexmo.message.sendsms(from, to, reason);
-    else console.log(reason);
+    console.log(reason);
     process.exit(1);
 };
 
@@ -58,7 +57,7 @@ handleError = (reason) => {
         ];
     }, TAB_SELECTOR).catch(handleError);
     if (artist !== ARTIST_TEST || song !== SONG_TEST) {
-        process.exit(1);
+        handleError('invalid artist or song');
     }
     await browser.close().catch(handleError);
     console.log(new Date() + ' script ended');
