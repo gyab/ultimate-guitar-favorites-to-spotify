@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer');
-const Nexmo = require('nexmo');
 const ENV = require('./env');
 
 const SIGN_UP_SELECTOR = '._2dYiw';
@@ -12,12 +11,6 @@ const SONG_SELECTOR = TAB_SELECTOR + ' td:nth-child(2)';
 const ARTIST_TEST = 'The Velvet Underground';
 const SONG_TEST = 'Sweet Jane';
 const production = ENV.production;
-const from = 'ug to spotify';
-const to = ENV.number;
-const nexmo = new Nexmo({
-    apiKey: ENV.NEXMO_API_KEY,
-    apiSecret: ENV.NEXMO_API_SECRET
-});
 
 handleError = (reason) => {
     if (production) nexmo.message.sendsms(from, to, reason);
@@ -65,9 +58,7 @@ handleError = (reason) => {
         ];
     }, TAB_SELECTOR).catch(handleError);
     if (artist !== ARTIST_TEST || song !== SONG_TEST) {
-        const text = 'it seems to be a problem with the extension';
-        if (production) nexmo.message.sendsms(from, to, text);
-        console.log('error, message sent');
+        process.exit(1);
     }
     await browser.close().catch(handleError);
     console.log(new Date() + ' script ended');
