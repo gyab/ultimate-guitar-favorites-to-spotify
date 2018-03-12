@@ -51,12 +51,14 @@ handleError = (reason) => {
     await page.waitFor(1000).catch(handleError);
     await page.evaluate(() => {
         const pageButtons = document.querySelectorAll(".kRvt3");
+        let hasBeenClicked = false;
         for(const button in pageButtons) {
             if (pageButtons[button].innerText.toLowerCase() === "all") {
-                pageButtons[button].click();
+                hasBeenClicked = true;
                 break;
             }
         }
+        if (!hasBeenClicked) handleError();
     }).catch(handleError);
     const [artist, song] = await page.evaluate((sel) => {
         const allLinks = document.querySelectorAll(sel);
