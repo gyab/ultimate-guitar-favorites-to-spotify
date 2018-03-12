@@ -49,6 +49,15 @@ handleError = (reason) => {
     await page.waitFor(1000).catch(handleError);
     await page.goto('https://www.ultimate-guitar.com/user/mytabs').catch(handleError);
     await page.waitFor(1000).catch(handleError);
+    await page.evaluate(() => {
+        const pageButtons = document.querySelectorAll(".kRvt3");
+        for(const button in pageButtons) {
+            if (pageButtons[button].innerText.toLowerCase() === "all") {
+                pageButtons[button].click();
+                break;
+            }
+        }
+    }).catch(handleError);
     const [artist, song] = await page.evaluate((sel) => {
         const allLinks = document.querySelectorAll(sel);
         return [
