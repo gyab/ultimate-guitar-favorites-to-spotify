@@ -74,8 +74,10 @@ function getData(pSongsArr) {
         //simulate click to get all the songs
         const pageButtons = document.querySelectorAll(".kRvt3");
         for(const button in pageButtons) {
-            if (pageButtons[button].innerText === "All")
+            if (pageButtons[button].innerText.toLowerCase() === "all") {
                 pageButtons[button].click();
+                break;
+            }
         }
 
         //For each song, get the artist and the song name
