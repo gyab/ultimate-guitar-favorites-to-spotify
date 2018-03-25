@@ -25,7 +25,9 @@ handleError = (reason) => {
         for (let i = 0; i < msg.args.length; ++i)
             console.log(`${i}: ${msg.args[i]}`);
     });
-    await page.goto('https://www.ultimate-guitar.com/').catch(handleError);
+    await page.goto('https://www.ultimate-guitar.com/', {
+        timeout: 0
+    }).catch(handleError);
     await page.waitFor(2000).catch(handleError);
     await page.evaluate(() => {
         const spans = document.querySelectorAll('span');
@@ -48,7 +50,9 @@ handleError = (reason) => {
         }
     }).catch(handleError);
     await page.waitFor(2000).catch(handleError);
-    await page.goto('https://www.ultimate-guitar.com/user/mytabs').catch(handleError);
+    await page.goto('https://www.ultimate-guitar.com/user/mytabs', {
+        timeout: 0
+    }).catch(handleError);
     await page.waitFor(2000).catch(handleError);
     await page.evaluate(() => {
         const pageButtons = document.querySelectorAll(".kRvt3");
