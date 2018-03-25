@@ -26,6 +26,7 @@ handleError = (reason) => {
             console.log(`${i}: ${msg.args[i]}`);
     });
     await page.goto('https://www.ultimate-guitar.com/').catch(handleError);
+    await page.waitFor(2000).catch(handleError);
     await page.evaluate(() => {
         const spans = document.querySelectorAll('span');
         for (const span in spans) {
@@ -33,7 +34,7 @@ handleError = (reason) => {
                 spans[span].click();
         }
     }).catch(handleError);
-    await page.waitFor(1000).catch(handleError);
+    await page.waitFor(2000).catch(handleError);
     await page.click(INPUT_USERNAME_SELECTOR).catch(handleError);
     await page.keyboard.type(ENV.username).catch(handleError);
     await page.keyboard.press('Tab').catch(handleError);
@@ -46,9 +47,9 @@ handleError = (reason) => {
             }
         }
     }).catch(handleError);
-    await page.waitFor(1000).catch(handleError);
+    await page.waitFor(2000).catch(handleError);
     await page.goto('https://www.ultimate-guitar.com/user/mytabs').catch(handleError);
-    await page.waitFor(1000).catch(handleError);
+    await page.waitFor(2000).catch(handleError);
     await page.evaluate(() => {
         const pageButtons = document.querySelectorAll(".kRvt3");
         let hasBeenClicked = false;
