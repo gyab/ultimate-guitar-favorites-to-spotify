@@ -81,19 +81,21 @@ function getData(pSongsArr) {
         }
 
         //For each song, get the artist and the song name
-        $("._335bj").each(function() {
-            const allLinks = $(this).find('a');
-            const artist = allLinks.length === 2 ? allLinks[0].innerText.trim() : pSongsArr[pSongsArr.length - 1][0];
-            const song = allLinks.length === 2 ? allLinks[1].innerText : allLinks[0].innerText;
-            pSongsArr.push([
-                artist,
-                song.replace(" Acoustic", '')
-                    .replace(" Chords", '')
-                    .replace(" Tab", '')
-                    .replace(" Ukulele", '')
-                    .replace(/\s*\(ver\s\d+\)\s*/, "")
-                    .trim()
-            ]);
+        $("._1iQi2").each(function() {
+            if (!$(this).hasClass('_1Lagi')) {
+                const allLinks = $(this).find('a');
+                const artist = allLinks.length === 2 ? allLinks[0].innerText.trim() : pSongsArr[pSongsArr.length - 1][0];
+                const song = allLinks.length === 2 ? allLinks[1].innerText : allLinks[0].innerText;
+                pSongsArr.push([
+                    artist,
+                    song.replace(" Acoustic", '')
+                        .replace(" Chords", '')
+                        .replace(" Tab", '')
+                        .replace(" Ukulele", '')
+                        .replace(/\s*\(ver\s\d+\)\s*/, "")
+                        .trim()
+                ]);   
+            }
         });
 
         resolve();
