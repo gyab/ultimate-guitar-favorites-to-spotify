@@ -3,6 +3,8 @@ const ENV = require('./env');
 
 const SIGN_UP_SELECTOR = '._2dYiw';
 const INPUT_USERNAME_SELECTOR = '._3pS6m._2_H_L.UAs0U';
+const GDPR_SELECTOR = '._1jouB';
+
 const INPUT_PASSWORD_SELECTOR = '._3pS6m._2_H_L.UAs0U';
 const SUBMIT_LOGIN_SELECTOR = '.ug-auth--btn__success';
 const TAB_SELECTOR = '._1iQi2 a';
@@ -29,6 +31,8 @@ handleError = (reason) => {
         timeout: 0
     }).catch(handleError);
     await page.waitFor(2000).catch(handleError);
+    await page.click(GDPR_SELECTOR).catch(handleError);
+        await page.waitFor(2000).catch(handleError);
     await page.evaluate(() => {
         const spans = document.querySelectorAll('span');
         for (const span in spans) {
