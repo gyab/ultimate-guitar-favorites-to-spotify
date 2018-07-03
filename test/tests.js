@@ -3,7 +3,7 @@ const ENV = require('./env');
 
 const SIGN_UP_SELECTOR = '._2dYiw';
 const INPUT_USERNAME_SELECTOR = '._3pS6m._2_H_L.UAs0U';
-const GDPR_SELECTOR = '._1jouB';
+const GDPR_SELECTOR = '._1DrOO';
 
 const INPUT_PASSWORD_SELECTOR = '._3pS6m._2_H_L.UAs0U';
 const SUBMIT_LOGIN_SELECTOR = '.ug-auth--btn__success';
