@@ -71,15 +71,6 @@ function getData(pSongsArr) {
 
     return new Promise(function(resolve, reject) {
 
-        //simulate click to get all the songs
-        const pageButtons = document.querySelectorAll(".kRvt3");
-        for(const button in pageButtons) {
-            if (pageButtons[button].innerText.toLowerCase() === "all") {
-                pageButtons[button].click();
-                break;
-            }
-        }
-
         //For each song, get the artist and the song name
         $("._1iQi2").each(function() {
             if (!$(this).hasClass('_1Lagi')) {
