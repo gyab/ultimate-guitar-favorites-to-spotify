@@ -72,8 +72,8 @@ function getData(pSongsArr) {
     return new Promise(function(resolve, reject) {
 
         //For each song, get the artist and the song name
-        $("._1iQi2").each(function() {
-            if (!$(this).hasClass('_1Lagi')) {
+        $("._1sYjv").each(function() {
+            if (!$(this).hasClass('JR4du')) {
                 const allLinks = $(this).find('a');
                 const artist = allLinks.length === 2 ? allLinks[0].innerText.trim() : pSongsArr[pSongsArr.length - 1][0];
                 const song = allLinks.length === 2 ? allLinks[1].innerText : allLinks[0].innerText;

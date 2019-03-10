@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "version": "1.6.4",
+  "version": "1.6.5",
   "icons": { "128": "icon128.png" },
   "name": "Ultimate Guitar Favorites to Spotify",
   "description": "Easily export your Ultimate Guitar favorite songs to your Spotify",
