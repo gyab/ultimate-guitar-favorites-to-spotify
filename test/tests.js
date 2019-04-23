@@ -2,12 +2,12 @@ const puppeteer = require('puppeteer');
 const ENV = require('./env');
 
 const SIGN_UP_SELECTOR = '._2dYiw';
-const INPUT_USERNAME_SELECTOR = '._2YJ_H._3lHvb._2h1C4';
+const INPUT_USERNAME_SELECTOR = '._1ay-z.xe4ZE._1YnM-';
 const GDPR_SELECTOR = '._1DrOO';
 
 const INPUT_PASSWORD_SELECTOR = '._3pS6m._2_H_L.UAs0U';
 const SUBMIT_LOGIN_SELECTOR = '.ug-auth--btn__success';
-const TAB_SELECTOR = '._1sYjv a';
+const TAB_SELECTOR = '._2vnXR a';
 const ARTIST_SELECTOR = TAB_SELECTOR + ' td:nth-child(1)';
 const SONG_SELECTOR = TAB_SELECTOR + ' td:nth-child(2)';
 const ARTIST_TEST = 'The Velvet Underground';
@@ -21,7 +21,7 @@ handleError = (reason) => {
 
 (async () => {
     console.log(new Date() + ' script start');
-    const browser = await puppeteer.launch().catch(handleError);
+    const browser = await puppeteer.launch({headless: false}).catch(handleError);
     const page = await browser.newPage().catch(handleError);
     page.on('console', msg => {
         for (let i = 0; i < msg.args.length; ++i)
@@ -59,7 +59,7 @@ handleError = (reason) => {
     }).catch(handleError);
     await page.waitFor(2000).catch(handleError);
     await page.evaluate(() => {
-        const pageButtons = document.querySelectorAll("._2UsDI");
+        const pageButtons = document.querySelectorAll("._3ItJL");
         let hasBeenClicked = false;
         for(const button in pageButtons) {
             if (pageButtons[button].innerText.toLowerCase() === "all") {
