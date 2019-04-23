@@ -21,7 +21,7 @@ handleError = (reason) => {
 
 (async () => {
     console.log(new Date() + ' script start');
-    const browser = await puppeteer.launch({headless: false}).catch(handleError);
+    const browser = await puppeteer.launch({headless: true}).catch(handleError);
     const page = await browser.newPage().catch(handleError);
     page.on('console', msg => {
         for (let i = 0; i < msg.args.length; ++i)
