@@ -38,7 +38,7 @@
     "dotenv": "^4.0.0",
     "halogen": "^0.2.0",
     "handlebars": "^4.0.6",
-    "jquery": "^3.2.1",
+    "jquery": "^3.5.0",
     "nexmo": "^2.0.2",
     "puppeteer": "^1.4.0",
     "react": "^15.4.2",
