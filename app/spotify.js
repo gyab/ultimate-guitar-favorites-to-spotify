@@ -1,7 +1,7 @@
 const $ = require('jquery');
 
 const CLIENT_ID = "e78c4b5a89334dea898452bfe6b1c1e5";
-const REDIRECT_URI = 'http://antoinemary.com/ug-to-spotify';
+const REDIRECT_URI = 'https://stupefied-heyrovsky-5aa4e2.netlify.app/';
 const scopes = ['playlist-read-private','playlist-modify-private'];
 
 let windowEventAttached = false;
@@ -72,8 +72,8 @@ function getData(pSongsArr) {
     return new Promise(function(resolve, reject) {
 
         //For each song, get the artist and the song name
-        $("._2vnXR").each(function() {
-            if (!$(this).hasClass('_2fMPe')) {
+        $(".pZcWD").each(function() {
+            if (!$(this).hasClass('_1_Vsf')) {
                 const allLinks = $(this).find('a');
                 const artist = allLinks.length === 2 ? allLinks[0].innerText.trim() : pSongsArr[pSongsArr.length - 1][0];
                 const song = allLinks.length === 2 ? allLinks[1].innerText : allLinks[0].innerText;
