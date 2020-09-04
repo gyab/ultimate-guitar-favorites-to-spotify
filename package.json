@@ -37,7 +37,7 @@
   "dependencies": {
     "dotenv": "^4.0.0",
     "halogen": "^0.2.0",
-    "handlebars": "^4.3.0",
+    "handlebars": "^4.5.3",
     "jquery": "^3.5.0",
     "nexmo": "^2.0.2",
     "puppeteer": "^1.4.0",
