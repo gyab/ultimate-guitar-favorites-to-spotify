@@ -41,6 +41,7 @@
     "braces": "^3.0.2",
     "create-react-app": "^3.4.1",
     "dotenv": "^8.2.0",
+    "ecstatic": "^4.1.4",
     "halogen": "^0.2.0",
     "handlebars": "^4.7.6",
     "jquery": "^3.5.1",
@@ -48,6 +49,7 @@
     "puppeteer": "^5.3.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-modal": "^3.11.2"
+    "react-modal": "^3.11.2",
+    "yargs-parser": "^20.2.0"
   }
 }
