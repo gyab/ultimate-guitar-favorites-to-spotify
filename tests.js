@@ -1,6 +1,4 @@
 const puppeteer = require('puppeteer');
-const ENV = require('./env');
-
 const INPUT_USERNAME_SELECTOR = '.em_b3';
 const GDPR_SELECTOR = '.eVjlOM';
 
@@ -36,9 +34,9 @@ module.exports = (async () => {
     }).catch(handleError);
     await page.waitFor(2000).catch(handleError);
     await page.click(INPUT_USERNAME_SELECTOR).catch(handleError);
-    await page.keyboard.type(ENV.username).catch(handleError);
+    await page.keyboard.type(username).catch(handleError);
     await page.keyboard.press('Tab').catch(handleError);
-    await page.keyboard.type(ENV.password).catch(handleError);
+    await page.keyboard.type(password).catch(handleError);
     await page.keyboard.press('Enter').catch(handleError);
     await page.waitFor(2000).catch(handleError);
     await page.goto('https://www.ultimate-guitar.com/user/mytabs', {
