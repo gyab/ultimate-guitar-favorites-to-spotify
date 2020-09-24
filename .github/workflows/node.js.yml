@@ -25,4 +25,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: npm test
+    - name: run test
+      run: npm test
+      env:
+        username: ${{ secrets.username }
+        password: ${{ secrets.password }
+  
