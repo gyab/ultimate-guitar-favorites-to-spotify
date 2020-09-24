@@ -4,8 +4,7 @@ module.exports = {
 	entry: {
 		app: ["./app/index.jsx"]
 	},
-	mode: 'development',
-	devtool: 'nosources-source-map',
+	mode: 'production',
 	output: {
 		path: path.resolve(__dirname, "build"),
 		filename: "app.js",

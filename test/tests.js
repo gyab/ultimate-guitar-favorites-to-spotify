@@ -1,18 +1,12 @@
 const puppeteer = require('puppeteer');
 const ENV = require('./env');
 
-const SIGN_UP_SELECTOR = '._2dYiw';
-const INPUT_USERNAME_SELECTOR = '._1ay-z.xe4ZE._1YnM-';
-const GDPR_SELECTOR = '._1DrOO';
+const INPUT_USERNAME_SELECTOR = '.em_b3';
+const GDPR_SELECTOR = '.eVjlOM';
 
-const INPUT_PASSWORD_SELECTOR = '._3pS6m._2_H_L.UAs0U';
-const SUBMIT_LOGIN_SELECTOR = '.ug-auth--btn__success';
-const TAB_SELECTOR = '._2vnXR a';
-const ARTIST_SELECTOR = TAB_SELECTOR + ' td:nth-child(1)';
-const SONG_SELECTOR = TAB_SELECTOR + ' td:nth-child(2)';
+const TAB_SELECTOR = '.pZcWD a';
 const ARTIST_TEST = 'The Velvet Underground';
-const SONG_TEST = 'Sweet Jane';
-const production = ENV.production;
+const SONG_TEST = 'Sweet Jane'
 
 handleError = (reason) => {
     console.log(reason);
@@ -32,11 +26,11 @@ handleError = (reason) => {
     }).catch(handleError);
     await page.waitFor(2000).catch(handleError);
     await page.click(GDPR_SELECTOR).catch(handleError);
-        await page.waitFor(2000).catch(handleError);
+    await page.waitFor(2000).catch(handleError);
     await page.evaluate(() => {
         const spans = document.querySelectorAll('span');
         for (const span in spans) {
-            if (spans[span].innerText === "Sign in")
+            if (spans[span].innerText === "LOG IN") 
                 spans[span].click();
         }
     }).catch(handleError);
@@ -45,24 +39,17 @@ handleError = (reason) => {
     await page.keyboard.type(ENV.username).catch(handleError);
     await page.keyboard.press('Tab').catch(handleError);
     await page.keyboard.type(ENV.password).catch(handleError);
-    await page.evaluate(() => {
-        const spans = document.querySelectorAll('footer span');
-        for (const span in spans) {
-            if (spans[span].innerText === "SIGN IN") {
-                spans[span].click();
-            }
-        }
-    }).catch(handleError);
+    await page.keyboard.press('Enter').catch(handleError);
     await page.waitFor(2000).catch(handleError);
     await page.goto('https://www.ultimate-guitar.com/user/mytabs', {
         timeout: 0
     }).catch(handleError);
     await page.waitFor(2000).catch(handleError);
     await page.evaluate(() => {
-        const pageButtons = document.querySelectorAll("._3ItJL");
+        const pageButtons = document.querySelectorAll("._2lrnk");
         let hasBeenClicked = false;
-        for(const button in pageButtons) {
-            if (pageButtons[button].innerText.toLowerCase() === "all") {
+        for(let button in pageButtons) {
+            if (pageButtons[button] && pageButtons[button].innerText === "ALL") {
                 hasBeenClicked = true;
                 break;
             }
