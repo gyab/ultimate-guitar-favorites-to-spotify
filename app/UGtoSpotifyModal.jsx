@@ -3,7 +3,7 @@ let React = require('react');
 let spotify = require('./spotify');
 let ReactDOM = require('react-dom');
 let ReactModal = require('react-modal');
-let Loader = require('halogen/ClipLoader');
+//let Loader = require('halogen/ClipLoader');
 
 export default class UGtoSpotifyModal extends React.Component {
     constructor () {
@@ -137,7 +137,7 @@ export default class UGtoSpotifyModal extends React.Component {
             button = <button style={modalButton} onClick={this.closeModal}>Close</button>;
         }
         else if(this.state.inProgress) {
-            loader = <Loader color="#6BC100" size="60px"/>
+            //loader = <Loader color="#6BC100" size="60px"/>
             button = <button className="modal__button-disabled" style={modalButton} disabled>Creating...</button>
         }
         else {
@@ -157,8 +157,7 @@ export default class UGtoSpotifyModal extends React.Component {
                 >
                     <h1 style={modalTitle}>UG Favorites to Spotify</h1>
                     {text}
-                    {input}
-                    {loader}
+                    {input}                    
                     {button}
                 </ReactModal>
             </div>
