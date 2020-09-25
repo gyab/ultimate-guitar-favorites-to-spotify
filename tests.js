@@ -13,7 +13,15 @@ handleError = (reason) => {
 
 module.exports = (async () => {
     console.log(new Date() + ' script start');
-    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: true}).catch(handleError);
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox'
+        ],
+        slowMo: 50
+      }).catch(handleError);
+    //const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox'], headless: true}).catch(handleError);
     const page = await browser.newPage().catch(handleError);
     page.on('console', msg => {
         for (let i = 0; i < msg.args.length; ++i)
