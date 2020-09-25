@@ -27,7 +27,7 @@ module.exports = (async () => {
         for (let i = 0; i < msg.args.length; ++i)
             console.log(`${i}: ${msg.args[i]}`);
     });
-    await page.goto('https://www.ultimate-guitar.com/', {
+    /**await page.goto('https://www.ultimate-guitar.com/', {
         timeout: 0
     }).catch(handleError);
     await page.waitFor(2000).catch(handleError);
@@ -71,7 +71,7 @@ module.exports = (async () => {
     }, TAB_SELECTOR).catch(handleError);
     if (artist !== ARTIST_TEST || song !== SONG_TEST) {
         handleError('invalid artist or song');
-    }
+    }**/
     await browser.close().catch(handleError);
     console.log(new Date() + ' script ended');
 })();
