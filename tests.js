@@ -1,8 +1,8 @@
 const puppeteer = require('puppeteer');
-const INPUT_USERNAME_SELECTOR = '.em_b3';
-const GDPR_SELECTOR = '.eVjlOM';
+const INPUT_USERNAME_SELECTOR = '._12b3b._10B_q._1icVK';
+const GDPR_SELECTOR = '.css-cdi241';
 
-const TAB_SELECTOR = '.pZcWD a';
+const TAB_SELECTOR = '._2amQf a';
 const ARTIST_TEST = 'The Velvet Underground';
 const SONG_TEST = 'Sweet Jane'
 
@@ -27,7 +27,7 @@ module.exports = (async () => {
         for (let i = 0; i < msg.args.length; ++i)
             console.log(`${i}: ${msg.args[i]}`);
     });
-    /**await page.goto('https://www.ultimate-guitar.com/', {
+    await page.goto('https://www.ultimate-guitar.com/', {
         timeout: 0
     }).catch(handleError);
     await page.waitFor(2000).catch(handleError);
@@ -52,7 +52,7 @@ module.exports = (async () => {
     }).catch(handleError);
     await page.waitFor(2000).catch(handleError);
     await page.evaluate(() => {
-        const pageButtons = document.querySelectorAll("._2lrnk");
+        const pageButtons = document.querySelectorAll("._3P7G9");
         let hasBeenClicked = false;
         for(let button in pageButtons) {
             if (pageButtons[button] && pageButtons[button].innerText === "ALL") {
@@ -71,7 +71,7 @@ module.exports = (async () => {
     }, TAB_SELECTOR).catch(handleError);
     if (artist !== ARTIST_TEST || song !== SONG_TEST) {
         handleError('invalid artist or song');
-    }**/
+    }
     await browser.close().catch(handleError);
     console.log(new Date() + ' script ended');
 })();

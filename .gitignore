@@ -4,3 +4,4 @@ env.js
 .DS_Store
 build.zip
 .idea/
+app.js.map
