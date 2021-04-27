@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 const INPUT_USERNAME_SELECTOR = '._12b3b._10B_q._1icVK';
-const GDPR_SELECTOR = '.css-cdi241';
+const GDPR_SELECTOR = 'css-cdi241';
 
 const TAB_SELECTOR = '._2amQf a';
 const ARTIST_TEST = 'The Velvet Underground';
@@ -31,7 +31,13 @@ module.exports = (async () => {
         timeout: 0
     }).catch(handleError);
     await page.waitFor(2000).catch(handleError);
-    await page.click(GDPR_SELECTOR).catch(handleError);
+    //await page.click(GDPR_SELECTOR).catch(handleError);
+    await page.evaluate((GDPR_SELECTOR) => {
+        const gdpr_button = document.getElementsByClassName(GDPR_SELECTOR);
+        if (gdpr_button) {
+            gdpr_button[0].click();
+        }
+    }, GDPR_SELECTOR).catch(handleError);
     await page.waitFor(2000).catch(handleError);
     await page.evaluate(() => {
         const spans = document.querySelectorAll('span');
