@@ -44,7 +44,7 @@
     "dotenv": "^8.2.0",
     "ecstatic": "^4.1.4",
     "halogen": "^0.2.0",
-    "handlebars": "^4.7.6",
+    "handlebars": "^4.7.7",
     "jest-puppeteer": "^4.4.0",
     "jquery": "^3.5.1",
     "nexmo": "^2.9.1",
